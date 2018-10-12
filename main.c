@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
 	else if(tk.cat==OPLOG) printf("<%s, %s> ",getCategoria(tk.cat),getOperadorLogico(tk.valor.numInt));
 	else if(tk.cat==INTCON) printf("<%s, %d> ",getCategoria(tk.cat),tk.valor.numInt);
 	else if(tk.cat==REALCON) printf("<%s, %.2f> ",getCategoria(tk.cat),tk.valor.numFloat);
+	else if (tk.cat==CARACON) printf("<%s, %c > ",getCategoria(tk.cat),tk.valor.c);
 	else printf("<%s, %s> ",getCategoria(tk.cat), tk.valor.s);
 	}while(tk.cat!= ERRO);
 	

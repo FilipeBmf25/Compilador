@@ -7,6 +7,7 @@ OPREL,
 OPARIT,
 OPLOG,
 CR,
+CARACON,
 ERRO} CATEGORIA;
 
 typedef enum OP_REL{
@@ -78,3 +79,5 @@ int isPalavraReservada(char *buffer, int menor, int maior);
 ** Chama a função de Analisar Tokens para retornar um token válido para a linguagem
 */
 Token AnalisadorLexico(FILE *fp);
+
+

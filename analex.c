@@ -13,6 +13,7 @@ char Categorias[][10]=
 	"OPARIT",
 	"OPLOG",
 	"CR",
+	"CARACON",
 	"ERRO"
 };
 
@@ -93,6 +94,11 @@ char* getOperadorLogico(int indice){
 	return OperadoresLogicos[indice];
 }
 
+int contadorLinha(int *pt_linha){
+	*pt_linha = &pt_linha + 1;
+	return &pt_linha;
+}
+
 int isPalavraReservada(char *buffer, int menor, int maior){
    int meio, cmp;
    
@@ -130,11 +136,9 @@ Token AnalisadorLexico(FILE *fp){
 						estado = 4;
 						
 					}else if (ch == '\''){
-						buffer[strlen(buffer)] = ch;
 						estado = 9;
 						
 					}else if (ch == '\n'){
-						buffer[strlen(buffer)] = ch; 
 						estado = 12;
 						
 					}else if (ch == '\0'){
@@ -275,9 +279,65 @@ Token AnalisadorLexico(FILE *fp){
 					tk.valor.numFloat = atof(buffer);
 				return (tk);
 				
+				case 9 :// RECONHECIMENTO DE CARACON
+					ch=getc(fp);
+					if (ch == '\''){
+						estado = -1;
+						tk.cat = ERRO;
+						strcpy(tk.valor.s,"ERRO LEXICO");
+						return (tk);
+					}
+					else if ((isprint(ch)) && (ch != '\\')){
+						
+						buffer[strlen(buffer)] = ch;
+						estado = 10;
+						break;
+					}
+					else if(ch == '\\'){// leitura caso falhe em casos normais fora o '\''
+						buffer[strlen(buffer)] = ch;
+						ch=getc(fp); 
+						buffer[strlen(buffer)] = ch;
+					}
 					
-				case 12 :
+					if (!(strcmp(buffer,"\\'"))){ // comparar se é '\''
+						buffer[0] = '\0';
+						buffer[1] = '\0';
+						buffer[0] = '\'';
+						estado = 10;
+					}
+					else if (!(strcmp(buffer,"\\\\"))){// comparar se é '\\'
+						buffer[0] = '\0';
+						buffer[1] = '\0';
+						buffer[0] = '\\';
+						estado = 10;
+					}
+					
+				
+				break;
+					
+				case 10 :
+					ch=getc(fp);
+					
+					if (ch == '\''){ // delimitador final de CARACON
+						estado = 11;
+					}
+					else{
+						estado = -1;
+						tk.cat = ERRO;
+						strcpy(tk.valor.s,"ERRO LEXICO");
+						return (tk);
+					}
+				break;
+				
+				case 11 : // GERANDO UM TOKEN CARACON
+					tk.cat = CARACON;
+					tk.valor.c = buffer[0];
+				return(tk);
+				
+					
+				case 12 : // TRATANDO O \N
 					estado = 0;
+					
 				break;				
 				
 				
@@ -357,6 +417,10 @@ Token AnalisadorLexico(FILE *fp){
 					
 								
 				case 23 :
+					estado = 0;
+				break;
+				
+				case 24: // TRATANDO O \T (TAB)
 					estado = 0;
 				break;	
 
