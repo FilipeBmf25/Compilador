@@ -3,97 +3,6 @@
 #include <string.h>
 #include "analex.h"
 
-char Categorias[][10]=
-{
-	"ID",
-	"INTCON",
-	"REALCON",
-	"PR",
-	"OPREL",
-	"OPARIT",
-	"OPLOG",
-	"CR",
-	"CARACON",
-	"ERRO"
-};
-
-char OperadoresRelacionais[][12]=
-{
-	"MAIOR",
-	"MENOR",
-	"IGUAL",
-	"IGUALIGUAL",
-	"MAIORIGUAL",
-	"MENORIGUAL",
-	"DIFERENTE"
-};
-
-char OperadoresAritmeticos[][13]=
-{
-	"MAIS",
-	"MENOS",
-	"MULTIPLICACAO",
-	"DIVISAO"
-};
-
-char OperadoresLogicos[][6]=
-{
-	".AND.",
-	".OR.",
-	".NOT."
-};
-
-char PalavrasReservadas[][10]=
-{
-	"bool",	
-	"call",
-	"char",
-	"display",
-	"dup",
-	"else",	
-	"endfor",
-	"endfunc",
-	"endif",
-	"endprog",
-	"endvar",
-	"endwhile",
-	"for",
-	"fwd",
-	"if",
-	"int",
-	"keyboard",
-	"ndproc",
-	"noparam",
-	"pl",
-	"proc",
-	"prog",
-	"real",
-	"return",
-	"var",
-	"while",
-	
-};
-
-char* getCategoria (int indice){
-	return Categorias[indice];
-}
-
-char* getPalavraReservada(int indice){
-	return PalavrasReservadas[indice];
-}
-
-char* getOperadorAritmetico(int indice){
-	return OperadoresAritmeticos[indice];
-}
-
-char* getOperadorRelacional(int indice){
-	return OperadoresRelacionais[indice];
-}
-
-char* getOperadorLogico(int indice){
-	return OperadoresLogicos[indice];
-}
-
 int contadorLinha(int *pt_linha){
 	*pt_linha = &pt_linha + 1;
 	return &pt_linha;
@@ -346,16 +255,16 @@ Token AnalisadorLexico(FILE *fp){
 					buffer[strlen(buffer)] = ch;
 					ch=getc(fp);
 					buffer[strlen(buffer)] = ch;
-					if(!(strcmp(buffer,".OR"))) {
+					if(!(strcmp(buffer,".or"))) {
 						estado = 19;
 						break;
 					}
 					ch=getc(fp);
 					buffer[strlen(buffer)] = ch;
-					if(!(strcmp(buffer,".AND"))) {
+					if(!(strcmp(buffer,".and"))) {
 						estado = 17;
 						break;
-					}else if (!(strcmp(buffer,".NOT"))) {
+					}else if (!(strcmp(buffer,".not"))) {
 						estado = 21;
 						break;
 					}else {
@@ -512,6 +421,31 @@ Token AnalisadorLexico(FILE *fp){
 		}
 		
 
+}
+
+int main(int argc, char *argv[]) {
+	FILE *fp;
+	Token tk;
+	char ch;
+	int n;
+	
+	if((fp = fopen("Teste Filipe.txt","r"))==NULL) printf("Arquivo não pode ser aberto\n");
+	
+	do{	
+		tk = AnalisadorLexico(fp);
+		if(tk.cat==PR) printf("<%s, %s> ", Categorias[tk.cat],(toupper(PalavrasReservadas[tk.valor.numInt])));
+		else if(tk.cat==OPREL) printf("<%s, %s> ",Categorias[tk.cat],OperadoresRelacionais[tk.valor.numInt]);
+		else if(tk.cat==OPARIT) printf("<%s, %s> ",Categorias[tk.cat],OperadoresAritmeticos[tk.valor.numInt]);
+		else if(tk.cat==OPLOG) printf("<%s, %s> ",Categorias[tk.cat],OperadoresLogicos[tk.valor.numInt]);
+		else if(tk.cat==INTCON) printf("<%s, %d> ",Categorias[tk.cat],tk.valor.numInt);
+		else if(tk.cat==REALCON) printf("<%s, %.2f> ",Categorias[tk.cat],tk.valor.numFloat);
+		else if (tk.cat==CARACON) printf("<%s, %c > ",Categorias[tk.cat],tk.valor.c);
+		else printf("<%s, %s> ",Categorias[tk.cat], tk.valor.s);
+	}while(tk.cat!= ERRO);
+	
+	fclose(fp);
+	
+	return 0;
 }
 
 

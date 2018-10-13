@@ -1,0 +1,21 @@
+prog {
+	var {
+		char c;
+		int inteiro;
+		real decimal =3.14; //PI
+	}endvar
+
+	//Entrada do Número Inteiro
+	keyboard inteiro;
+
+	//Teste Lógico
+	if(.not.(inteiro>0 .and.decimal<10)) {
+		c = 'S';
+	}else c='N';
+	endif
+
+	display("==== Resultado ====\n");
+	display("A \"Letra\" escolhida e: ");
+	display(c);
+} endprog
+	

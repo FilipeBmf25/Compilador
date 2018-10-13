@@ -1,3 +1,6 @@
+/*
+** Enumerador para as Categorias 
+*/
 typedef enum Categoria{
 ID,
 INTCON,
@@ -10,6 +13,23 @@ CR,
 CARACON,
 ERRO} CATEGORIA;
 
+/*
+** Vetor que atribui à Categoria o seu valor em formato String
+*/
+char Categorias[][10]=
+{
+	"ID",
+	"INTCON",
+	"REALCON",
+	"PR",
+	"OPREL",
+	"OPARIT",
+	"OPLOG",
+	"CR",
+	"CARACON",
+	"ERRO"
+};
+
 typedef enum OP_REL{
 MAIOR,
 MENOR,
@@ -20,11 +40,35 @@ MENORIGUAL,
 DIFERENTE
 } OPERADORESRELACIONAIS;
 
+/*
+** Vetor que atribui aos Operadores Relacionais o seu valor em formato String
+*/
+char OperadoresRelacionais[][12]=
+{
+	"MAIOR",
+	"MENOR",
+	"IGUAL",
+	"IGUALIGUAL",
+	"MAIORIGUAL",
+	"MENORIGUAL",
+	"DIFERENTE"
+};
+
 typedef enum OP_LOG{
 	AND,
 	OR,
 	NOT
 }OPERADORESLOGICOS;
+
+/*
+** Vetor que atribui aos Operadores Logicos o seu valor em formato String
+*/
+char OperadoresLogicos[][6]=
+{
+	"AND",
+	"OR",
+	"NOT"
+};
 
 typedef enum OP_ARIT{
 	MAIS,
@@ -33,6 +77,50 @@ typedef enum OP_ARIT{
 	DIVISAO
 }PALAVRASRESERVADAS;
 
+/*
+** Vetor que atribui aos Operadores Aritmeticos o seu valor em formato String
+*/
+char OperadoresAritmeticos[][13]=
+{
+	"MAIS",
+	"MENOS",
+	"MULTIPLICACAO",
+	"DIVISAO"
+};
+
+/*
+** Vetor de Palavras Reservadas da Linguagem
+*/
+char PalavrasReservadas[][10]=
+{
+	"bool",	
+	"call",
+	"char",
+	"display",
+	"dup",
+	"else",	
+	"endfor",
+	"endfunc",
+	"endif",
+	"endprog",
+	"endvar",
+	"endwhile",
+	"for",
+	"fwd",
+	"if",
+	"int",
+	"keyboard",
+	"ndproc",
+	"noparam",
+	"pl",
+	"proc",
+	"prog",
+	"real",
+	"return",
+	"var",
+	"while",
+	
+};
 
 typedef struct token {
 	CATEGORIA cat;
@@ -44,31 +132,6 @@ typedef struct token {
 	}valor;
 }Token;
 
-
-/*
-** Retorna a string correspondente ao enum de Categorias setado no token como inteiro
-*/
-char* getCategoria (int indice);
-
-/*
-** Retorna a string correspondente ao enum de Palavras Reservadas setado no token como inteiro
-*/
-char* getPalavraReservada(int indice);
-
-/*
-** Retorna a string correspondente ao enum de Operadores Aritmeticos setado no token como inteiro
-*/
-char* getOperadorAritmetico(int indice);
-
-/*
-** Retorna a string correspondente ao enum de Operadores Relacionais setado no token como inteiro
-*/
-char* getOperadorRelacional(int indice);
-
-/*
-** Retorna a string correspondente ao enum de Operadores Lógicos setado no token como inteiro
-*/
-char* getOperadorLogico(int indice);
 
 /*
 ** Retorna um inteiro, onde (1) é uma Palavra Reservada e (0) não é
