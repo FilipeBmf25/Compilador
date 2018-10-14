@@ -1,1 +1,17 @@
-(
+prog {
+	int valorIP;
+	int valorBin=0;
+	int numero=255;
+		
+	for (valorIP=128;valorIP>=1;valorIP=valorIP/2){
+		valorBin=valorBin*10;
+		if(numero>=valorIP){
+			valorBin=valorBin+1;
+			numero = numero - valorIP;
+		}else valorBin=valorBin+0;
+		
+	}
+	
+	
+}
+	
