@@ -30,6 +30,9 @@ char Categorias[][10]=
 	"ERRO"
 };
 
+/*
+** Enumerador para os Operadores Relacionais 
+*/
 typedef enum OP_REL{
 MAIOR,
 MENOR,
@@ -54,6 +57,9 @@ char OperadoresRelacionais[][12]=
 	"DIFERENTE"
 };
 
+/*
+** Enumerador para os Operadores Lógicos 
+*/
 typedef enum OP_LOG{
 	AND,
 	OR,
@@ -70,6 +76,9 @@ char OperadoresLogicos[][6]=
 	"NOT"
 };
 
+/*
+** Enumerador para os Operadores Aritméticos 
+*/
 typedef enum OP_ARIT{
 	MAIS,
 	MENOS,
@@ -87,6 +96,8 @@ char OperadoresAritmeticos[][13]=
 	"MULTIPLICACAO",
 	"DIVISAO"
 };
+
+
 
 /*
 ** Vetor de Palavras Reservadas da Linguagem

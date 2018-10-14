@@ -440,7 +440,7 @@ int main(int argc, char *argv[]) {
 		else if(tk.cat==INTCON) printf("<%s, %d> ",Categorias[tk.cat],tk.valor.numInt);
 		else if(tk.cat==REALCON) printf("<%s, %.2f> ",Categorias[tk.cat],tk.valor.numFloat);
 		else if (tk.cat==CARACON) printf("<%s, %c > ",Categorias[tk.cat],tk.valor.c);
-		else printf("<%s, %s> ",Categorias[tk.cat], tk.valor.s);
+		//else printf("<%s, %s> ",Categorias[tk.cat], tk.valor.s);
 	}while(tk.cat!= ERRO);
 	
 	fclose(fp);
