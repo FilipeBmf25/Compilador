@@ -26,7 +26,7 @@ int isPalavraReservada(char *buffer, int menor, int maior){
 
 Token AnalisadorLexico(FILE *fp){
 	Token tk;
-	char buffer[10]="";
+	char buffer[256]="";
 	char ch;
 	int estado = 0;
 	int indice;
@@ -57,7 +57,6 @@ Token AnalisadorLexico(FILE *fp){
 							estado = 13;
 							
 						}else if (ch == '\"'){
-							buffer[strlen(buffer)] = ch; 
 							estado = 14;
 							
 						}else if (ch == '.'){ 
@@ -277,6 +276,21 @@ Token AnalisadorLexico(FILE *fp){
 						
 					break;				
 					
+					case 14 : //RECONHECIMENTO DE CADEIACON
+					ch=getc(fp);
+						if (ch == '\"'){ 
+							estado = 15;							
+						}else {
+							buffer[strlen(buffer)] = ch;
+						}
+						
+					break;
+					
+					case 15 : // RECONHECIMENTO DE CADEIACON
+						tk.cat = CADEIACON;
+						strcpy(tk.valor.s,buffer);
+						return (tk);
+										
 					
 					case 16 : // RECONHECIMENTO DOS OPERADORES LÓGICOS
 						ch=getc(fp);
@@ -361,17 +375,37 @@ Token AnalisadorLexico(FILE *fp){
 						estado = 0;
 					break;	
 	
-	
 					case 25 :
 						tk.cat=OPARIT;
 						tk.valor.numInt = MULTIPLICACAO;
 					return (tk);
 					
 					case 27 :
+						ch=getc(fp);
+						if(ch=='/') estado = 29;
+						else estado = 28; 
+					break;
+	
+					case 28 : //RECONHECIMENTO DE DIVISÃO 
+						ungetc(ch,fp);	
 						tk.cat=OPARIT;
 						tk.valor.numInt = DIVISAO;
 					return (tk);
-	
+					
+					case 29 : //RECONHECIMENTO DE COMENTARIO
+						ch=getc(fp);
+						if(ch=='\n'){
+							estado = 30;
+							linha++;
+						}else if (ch==EOF) estado = 30;
+						else buffer[strlen(buffer)] = ch;
+					break;
+					
+					case 30 :
+						tk.cat=COMENTARIO;
+						strcpy(tk.valor.s,buffer);
+					return (tk);
+						
 						
 					case 31 :
 						tk.cat=OPARIT;
@@ -500,7 +534,7 @@ int main(int argc, char *argv[]) {
 	FILE *fp;
 	Token tk;
 	
-	if((fp = fopen("Teste Filipe.txt","r"))==NULL) printf("Arquivo não pode ser aberto\n");
+	if((fp = fopen("teste5.txt","r"))==NULL) printf("Arquivo não pode ser aberto\n");
 	
 	do{	
 		tk = AnalisadorLexico(fp);
@@ -511,7 +545,9 @@ int main(int argc, char *argv[]) {
 		else if(tk.cat==OPLOG) printf("<%s, %s> ",Categorias[tk.cat],OperadoresLogicos[tk.valor.numInt]);
 		else if(tk.cat==INTCON) printf("<%s, %d> ",Categorias[tk.cat],tk.valor.numInt);
 		else if(tk.cat==REALCON) printf("<%s, %.2f> ",Categorias[tk.cat],tk.valor.numFloat);
-		else if (tk.cat==CARACON) printf("<%s, %c > ",Categorias[tk.cat],tk.valor.c);
+		else if (tk.cat==CARACON) printf("<%s, %c> ",Categorias[tk.cat],tk.valor.c);
+		else if(tk.cat==CADEIACON) printf("<%s, %s> ",Categorias[tk.cat],tk.valor.s);
+		else if(tk.cat==COMENTARIO) printf("<%s, %s> ",Categorias[tk.cat],tk.valor.s);
 		//else printf("<%s, %s> ",Categorias[tk.cat], tk.valor.s);
 	}while(tk.cat!= ERRO);
 	

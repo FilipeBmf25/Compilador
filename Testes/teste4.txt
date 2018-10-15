@@ -1,0 +1,11 @@
+prog {
+	display('c') 	//Um Caractere
+	display('\'') 	//Um Caractere Especial
+	display('\0') 	//NUL?
+	display('\n') 	//CR
+	display(""); 	//String Vazia
+	display("s");	//String Minúscula
+	display("String Pequena");	//String Pequena
+	display("Olha \"isso\" aqui.\n - 'TOP'!");	//String com Caracteres Especiais
+	display("Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;Uma String Grande;");
+} endprog

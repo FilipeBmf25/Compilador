@@ -1,0 +1,36 @@
+prog {
+	var{
+		int x;
+		int numeroMagico;
+		int tentativas;
+	} endvar;
+
+	display("--[?] Insira um numero magico: ");
+	keyboard numeroMagico;
+
+	//Uma pequena validação de entrada
+	while(numeroMagico < 0 .and. numeroMagico == 0){
+		display("--[!] Por favor insira um numero positivo maior que \"Zero\".\n");
+		display("--[?] Insira um numero magico: ");
+		keyboard numeroMagico;
+	} endwhile
+
+	display(">> Qual e o numero magico? ");
+	keyboard x;
+
+	for (tentativas=1, x # numeroMagico, tentativas=tentativas+1) {
+		if(x > numeroMagico){
+			display(x+" eh maior! Tente novamente ;) \n");
+		} else {
+			display(x+" eh menor! Tente novamente ;) \n");
+		} endif
+
+		display(">> Qual e o numero magico? ");
+		keyboard x;
+
+	} endfor
+
+	display("Parabens! Acertou em " + tentativas + " :)");
+	return;
+
+} endprog

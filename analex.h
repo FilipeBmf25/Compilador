@@ -11,12 +11,14 @@ OPARIT,
 OPLOG,
 CR,
 CARACON,
+CADEIACON,
+COMENTARIO,
 ERRO} CATEGORIA;
 
 /*
 ** Vetor que atribui à Categoria o seu valor em formato String
 */
-char Categorias[][10]=
+char Categorias[][12]=
 {
 	"ID",
 	"INTCON",
@@ -27,6 +29,8 @@ char Categorias[][10]=
 	"OPLOG",
 	"CR",
 	"CARACON",
+	"CADEIACON",
+	"COMENTARIO",
 	"ERRO"
 };
 
@@ -89,7 +93,7 @@ typedef enum OP_ARIT{
 /*
 ** Vetor que atribui aos Operadores Aritmeticos o seu valor em formato String
 */
-char OperadoresAritmeticos[][13]=
+char OperadoresAritmeticos[][15]=
 {
 	"MAIS",
 	"MENOS",
@@ -139,7 +143,7 @@ typedef struct token {
 		int numInt;
 		float numFloat;
 		char c;
-		char s[10];
+		char s[256];
 	}valor;
 }Token;
 
