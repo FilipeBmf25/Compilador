@@ -9,10 +9,11 @@ PR,
 OPREL,
 OPARIT,
 OPLOG,
-CR,
 CARACON,
 CADEIACON,
 COMENTARIO,
+DELIMITADOR,
+FIM,
 ERRO} CATEGORIA;
 
 /*
@@ -27,10 +28,10 @@ char Categorias[][12]=
 	"OPREL",
 	"OPARIT",
 	"OPLOG",
-	"CR",
 	"CARACON",
 	"CADEIACON",
 	"COMENTARIO",
+	"DELIMIT",
 	"ERRO"
 };
 
@@ -78,6 +79,52 @@ char OperadoresLogicos[][6]=
 	"AND",
 	"OR",
 	"NOT"
+};
+
+/*
+** Enumerador para os Caracteres \n e \0 
+*/
+typedef enum CARAC_ESPECIAIS{
+	CR,
+	NUL
+}CARAC_ESPECIAIS;
+
+/*
+** Vetor que atribui aos Caracteres \n e \0 o seu valor em formato String
+*/
+char Especiais[][5]=
+{
+	"CR",
+	"NUL"
+};
+
+/*
+** Enumerador para os Delimitadores da Linguagem PL
+*/
+typedef enum DELIMITADORES{
+	A_PARENT,
+	F_PARENT,
+	A_COLCH,
+	F_COLCH,
+	A_CHAVES,
+	F_CHAVES,
+	VIRG,
+	PT_VIRG
+}DELIMITADORES;
+
+/*
+** Vetor que atribui aos Caracteres \n e \0 o seu valor em formato String
+*/
+char Delimitadores[][15]=
+{
+	"A_PARENT",
+	"F_PARENT",
+	"A_COLCH",
+	"F_COLCH",
+	"A_CHAVES",
+	"F_CHAVES",
+	"VIRG",
+	"PT_VIRG",
 };
 
 /*

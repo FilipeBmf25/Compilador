@@ -1,0 +1,23 @@
+prog {
+	var {
+		int a;
+		char b;
+		real f;
+	} endvar
+
+
+
+	a =10;
+	b= 5;
+
+	//Soma de Inteiro com Char
+	a = a +b;
+
+	keyboard f;
+	f = f + 2.7182; //EULER
+
+	display("Huehuehue BR\n");
+	display('['+ f +']');
+	display(">> Soma: " + a);
+
+} endprog
