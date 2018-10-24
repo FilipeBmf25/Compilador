@@ -190,7 +190,7 @@ typedef struct token {
 		int numInt;
 		float numFloat;
 		char c;
-		char s[256];
+		char s[10];
 	}valor;
 }Token;
 
@@ -205,4 +205,18 @@ int isPalavraReservada(char *buffer, int menor, int maior);
 */
 Token AnalisadorLexico(FILE *fp);
 
+/*
+** Vetor de Strings para comentários e CADEIACON da Linguagem PL
+*/
+char **stringsPL;
+
+/*
+** Função para alocar dinamicamente a String no Vetor stringsPL
+*/
+int alocaString(char *buffer);
+
+/*
+** Função para liberar a memória alocada dinamicamente
+*/
+void liberarString();
 

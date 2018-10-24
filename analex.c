@@ -3,18 +3,43 @@
 #include <string.h>
 #include "analex.h"
 
+int indiceString=0;
+
 int isPalavraReservada(char *buffer, int menor, int maior){
    int meio, cmp;
-
    if (menor > maior) return -1;
    meio = (menor + maior) / 2;
    cmp = strcmp(PalavrasReservadas[meio], buffer);
-   if (cmp == 0 )
-      return meio;
-   if (cmp > 0)
-      return isPalavraReservada(buffer, menor, meio - 1);
-   else
-      return isPalavraReservada(buffer, meio + 1, maior);
+   if (cmp == 0 ) return meio;
+   if (cmp > 0) return isPalavraReservada(buffer, menor, meio - 1);
+   else return isPalavraReservada(buffer, meio + 1, maior);
+}
+
+int alocaString(char *buffer){
+	if(indiceString==0){
+	if(!(stringsPL = malloc(sizeof(char*)*1))) return 0;	
+	//	if(!(char*)calloc(1,sizeof(char))) return 0;
+	}else {
+		if(!(stringsPL=realloc(stringsPL,(sizeof(char*)*1)))) return 0;
+	};	
+	if(!(stringsPL[indiceString]=malloc(sizeof(char)*(strlen(buffer)+1)))) return 0;
+	//if(!(char*)calloc((strlen(buffer)+1),sizeof(char))) return 0;
+	
+	strcpy(stringsPL[indiceString],buffer);	
+		
+	return 1;
+}
+
+void liberarString(){
+	int i;
+	for(i=0;i<indiceString;i++){
+		free(stringsPL[i]);	
+	}
+	
+	free(stringsPL);
+	printf("Apaguei essa porra");
+	
+	return;
 }
 
 Token AnalisadorLexico(FILE *fp){
@@ -281,8 +306,14 @@ Token AnalisadorLexico(FILE *fp){
 					break;
 
 					case 15 : // RECONHECIMENTO DE CADEIACON
-						tk.cat = CADEIACON;
-						strcpy(tk.valor.s,buffer);
+						if(alocaString(buffer)){
+							tk.cat=CADEIACON;
+							tk.valor.numInt=indiceString++;		
+						}else {
+							tk.cat=ERRO;
+							printf("\nProblema de alocação no comentario");
+						}
+						
 						return (tk);
 
 
@@ -401,8 +432,14 @@ Token AnalisadorLexico(FILE *fp){
 					break;
 
 					case 30 :
-						tk.cat=COMENTARIO;
-						strcpy(tk.valor.s,buffer);
+						if(alocaString(buffer)){
+							tk.cat=COMENTARIO;
+							tk.valor.numInt=indiceString++;		
+						}else {
+							tk.cat=ERRO;
+							printf("\nProblema de alocação no comentario");
+						}
+						
 					return (tk);
 
 
@@ -537,7 +574,7 @@ int main(int argc, char *argv[]) {
 
 	system("color f0");
 
-	if((fp = fopen("teste2.txt","r"))==NULL) printf("Arquivo não pode ser aberto\n");
+	if((fp = fopen("teste5.txt","r"))==NULL) printf("Arquivo não pode ser aberto\n");
 	printf("\n%d.  ",linha);
 	do{
 
@@ -553,19 +590,18 @@ int main(int argc, char *argv[]) {
 		else if(tk.cat==CARACON){
 			if(tk.valor.numInt==CR) printf("\n%d.  ",++linha);
 			else printf("<%s, %c> ",Categorias[tk.cat],tk.valor.c);
-		}else if(tk.cat==CADEIACON) printf("<%s, %s> ",Categorias[tk.cat],tk.valor.s);
-		else if(tk.cat==COMENTARIO) printf("<%s, %s> ",Categorias[tk.cat],tk.valor.s);
+		}else if(tk.cat==CADEIACON) printf("<%s, %s> ",Categorias[tk.cat],stringsPL[tk.valor.numInt]);
+		else if(tk.cat==COMENTARIO) printf("<%s, %s> ",Categorias[tk.cat],stringsPL[tk.valor.numInt]);
 		else if(tk.cat==DELIMITADOR) printf("<%s, %s> ",Categorias[tk.cat],Delimitadores[tk.valor.numInt]);
 		else if(tk.cat==ERRO) {
 			system("color f4");
 			printf("\n\n ERROR FATAL: ERRO LEXICO NA LINHA %d",linha);
-
 		}
-		//else printf("<%s, %s> ",Categorias[tk.cat], tk.valor.s);
 	}while((tk.cat!=FIM)&&(tk.cat!=ERRO));
 
 	fclose(fp);
-
+	liberarString();
+	
 	return 0;
 }
 
