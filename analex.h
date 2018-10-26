@@ -1,3 +1,38 @@
+
+/*
+** Vetor de Palavras Reservadas da Linguagem
+*/
+char PalavrasReservadas[][10]=
+{
+	"bool",	
+	"call",
+	"char",
+	"display",
+	"dup",
+	"else",	
+	"endfor",
+	"endfunc",
+	"endif",
+	"endprog",
+	"endvar",
+	"endwhile",
+	"for",
+	"fwd",
+	"if",
+	"int",
+	"keyboard",
+	"ndproc",
+	"noparam",
+	"pl",
+	"proc",
+	"prog",
+	"real",
+	"return",
+	"var",
+	"while",
+	
+};
+
 /*
 ** Enumerador para as Categorias 
 */
@@ -148,42 +183,6 @@ char OperadoresAritmeticos[][15]=
 	"DIVISAO"
 };
 
-
-
-/*
-** Vetor de Palavras Reservadas da Linguagem
-*/
-char PalavrasReservadas[][10]=
-{
-	"bool",	
-	"call",
-	"char",
-	"display",
-	"dup",
-	"else",	
-	"endfor",
-	"endfunc",
-	"endif",
-	"endprog",
-	"endvar",
-	"endwhile",
-	"for",
-	"fwd",
-	"if",
-	"int",
-	"keyboard",
-	"ndproc",
-	"noparam",
-	"pl",
-	"proc",
-	"prog",
-	"real",
-	"return",
-	"var",
-	"while",
-	
-};
-
 typedef struct token {
 	CATEGORIA cat;
 	union valor {
@@ -208,15 +207,4 @@ Token AnalisadorLexico(FILE *fp);
 /*
 ** Vetor de Strings para comentários e CADEIACON da Linguagem PL
 */
-char **stringsPL;
-
-/*
-** Função para alocar dinamicamente a String no Vetor stringsPL
-*/
-int alocaString(char *buffer);
-
-/*
-** Função para liberar a memória alocada dinamicamente
-*/
-void liberarString();
-
+char stringsPL[100][56];
