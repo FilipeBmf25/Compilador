@@ -212,42 +212,39 @@ Token AnalisadorLexico(FILE *fp){
 						ch=getc(fp);
 						if (ch == '\''){ // leitura do VAZIO ''
 							estado = 11;
-							break;
-			
-						}
-						else if ((isprint(ch)) && (ch != '\\')){ // leitura de algo printavel diferente de /
-
+							
+						}else if ((isprint(ch)) && (ch != '\\')){ // leitura de algo printavel diferente de /
 							buffer[strlen(buffer)] = ch;
 							estado = 10;
-							break;
-						}
-						else if(ch == '\\'){// leitura do /
-							buffer[strlen(buffer)] = ch;
+							
+						}else if(ch == '\\'){// leitura do /
 							ch=getc(fp);
-							buffer[strlen(buffer)] = ch;
-								
-								if(!(strcmp(buffer,"\\'"))){ // comparar se é apóstrofo
-									buffer[0] = '\0';
-									buffer[1] = '\0';
-									buffer[0] = '\'';
-									estado = 10;
-									break;
-								}	
-								else if (!(strcmp(buffer,"\\0"))){ // comparar se é '\0'
-									estado = 11;
-									break;
-								}
-								else if (!(strcmp(buffer,"\\n"))){ // comparar se é '\n'
-									estado = 11;
-									break;
-								}
-								else{
+							if(ch=='\'') {
+								buffer[strlen(buffer)] = '\'';
+								estado = 10;	
+							}else if(ch=='n'){
+								buffer[strlen(buffer)]='\n';	
+								estado = 10;
+							} 
+							else if(ch=='0') {
+								buffer[strlen(buffer)]='\0';	
+								estado = 10;
+							}else if(ch=='\''){				 // RESOLVER O BARRA AQUI				
+								buffer[strlen(buffer)]='\\';	
+								estado = 10;								
+							}else {
+								tk.cat = ERRO;
+								strcpy(tk.valor.s,"ERRO LEXICO");
+								return(tk);
+							}
+																			
+						}else{
 									estado = -1;
 									tk.cat = ERRO;
 									strcpy(tk.valor.s,"ERRO LEXICO");
 									return (tk);
-								}	
-						}
+						}	
+						
 					    break;
 
 					case 10 :
@@ -266,18 +263,15 @@ Token AnalisadorLexico(FILE *fp){
 					break;
 
 					case 11 : // GERANDO UM TOKEN CARACON
-						if((buffer[0] == '\0') || (!strcmp(buffer,"\\0"))){
-						
+						if(buffer[0] == '\0'){
 							tk.cat = CARACON;
 							tk.valor.numInt = NUL;
 							return(tk);
-						}
-						else if (!(strcmp(buffer,"\\n"))){
+						}else if (buffer[0] == '\n'){
 							tk.cat = CARACON;
 							tk.valor.numInt = CR;
 							return(tk);
-						}
-						else{
+						}else{
 							tk.cat = CARACON;
 							tk.valor.c = buffer[0];
 							return(tk);
@@ -570,7 +564,7 @@ int main(int argc, char *argv[]) {
 	
 	system("color f0");
 
-	if((fp = fopen("Teste Adriano.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n");
+	if((fp = fopen("Teste Filipe.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n");
 	printf("\n%d.  ",linha);
 	do{
 
