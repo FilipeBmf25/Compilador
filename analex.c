@@ -47,7 +47,7 @@ Token AnalisadorLexico(FILE *fp){
 							buffer[strlen(buffer)] = ch;
 							estado = 13;
 
-						}else if (ch == '\"'){
+						}else if (ch == '"'){
 							estado = 14;
 
 						}else if (ch == '.'){
@@ -210,39 +210,45 @@ Token AnalisadorLexico(FILE *fp){
 
 					case 9 :// RECONHECIMENTO DE CARACON
 						ch=getc(fp);
-						if (ch == '\''){
-							estado = -1;
-							tk.cat = ERRO;
-							strcpy(tk.valor.s,"ERRO LEXICO");
-							return (tk);
+						if (ch == '\''){ // leitura do VAZIO ''
+							estado = 11;
+							break;
+			
 						}
-						else if ((isprint(ch)) && (ch != '\\')){
+						else if ((isprint(ch)) && (ch != '\\')){ // leitura de algo printavel diferente de /
 
 							buffer[strlen(buffer)] = ch;
 							estado = 10;
 							break;
 						}
-						else if(ch == '\\'){// leitura caso falhe em casos normais fora o '\''
+						else if(ch == '\\'){// leitura do /
 							buffer[strlen(buffer)] = ch;
 							ch=getc(fp);
 							buffer[strlen(buffer)] = ch;
+								
+								if(!(strcmp(buffer,"\\'"))){ // comparar se é apóstrofo
+									buffer[0] = '\0';
+									buffer[1] = '\0';
+									buffer[0] = '\'';
+									estado = 10;
+									break;
+								}	
+								else if (!(strcmp(buffer,"\\0"))){ // comparar se é '\0'
+									estado = 11;
+									break;
+								}
+								else if (!(strcmp(buffer,"\\n"))){ // comparar se é '\n'
+									estado = 11;
+									break;
+								}
+								else{
+									estado = -1;
+									tk.cat = ERRO;
+									strcpy(tk.valor.s,"ERRO LEXICO");
+									return (tk);
+								}	
 						}
-
-						if (!(strcmp(buffer,"\\'"))){ // comparar se é '\''
-							buffer[0] = '\0';
-							buffer[1] = '\0';
-							buffer[0] = '\'';
-							estado = 10;
-						}
-						else if (!(strcmp(buffer,"\\\\"))){// comparar se é '\\'
-							buffer[0] = '\0';
-							buffer[1] = '\0';
-							buffer[0] = '\\';
-							estado = 10;
-						}
-
-
-					break;
+					    break;
 
 					case 10 :
 						ch=getc(fp);
@@ -256,12 +262,26 @@ Token AnalisadorLexico(FILE *fp){
 							strcpy(tk.valor.s,"ERRO LEXICO");
 							return (tk);
 						}
+						
 					break;
 
 					case 11 : // GERANDO UM TOKEN CARACON
-						tk.cat = CARACON;
-						tk.valor.c = buffer[0];
-					return(tk);
+						if((buffer[0] == '\0') || (!strcmp(buffer,"\\0"))){
+						
+							tk.cat = CARACON;
+							tk.valor.numInt = NUL;
+							return(tk);
+						}
+						else if (!(strcmp(buffer,"\\n"))){
+							tk.cat = CARACON;
+							tk.valor.numInt = CR;
+							return(tk);
+						}
+						else{
+							tk.cat = CARACON;
+							tk.valor.c = buffer[0];
+							return(tk);
+						}
 
 
 					case 12 : // TRATANDO O \N
@@ -550,7 +570,7 @@ int main(int argc, char *argv[]) {
 	
 	system("color f0");
 
-	if((fp = fopen("teste6.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n");
+	if((fp = fopen("Teste Adriano.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n");
 	printf("\n%d.  ",linha);
 	do{
 
@@ -564,11 +584,16 @@ int main(int argc, char *argv[]) {
 		else if(tk.cat==INTCON) printf("<%s, %d> ",Categorias[tk.cat],tk.valor.numInt);
 		else if(tk.cat==REALCON) printf("<%s, %.2f> ",Categorias[tk.cat],tk.valor.numFloat);
 		else if(tk.cat==CARACON){
-			if(tk.valor.numInt==CR) printf("\n%d.  ",++linha);
+			if(tk.valor.numInt==CR){
+				printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
+				printf("\n%d.  ",++linha);
+			} 
+			else if(tk.valor.numInt==NUL) printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
 			else printf("<%s, %c> ",Categorias[tk.cat],tk.valor.c);
 		}else if(tk.cat==CADEIACON) printf("<%s, %s> ",Categorias[tk.cat],stringsPL[tk.valor.numInt]);
 		else if(tk.cat==COMENTARIO) printf("<%s, %s> ",Categorias[tk.cat],stringsPL[tk.valor.numInt]);
 		else if(tk.cat==DELIMITADOR) printf("<%s, %s> ",Categorias[tk.cat],Delimitadores[tk.valor.numInt]);
+		else if(tk.cat==CARAC_ESPEC) printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
 		else if(tk.cat==ERRO) {
 			system("color f4");
 			printf("\n\n\n--------------------------------");

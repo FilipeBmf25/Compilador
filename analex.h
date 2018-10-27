@@ -37,6 +37,7 @@ char PalavrasReservadas[][10]=
 ** Enumerador para as Categorias 
 */
 typedef enum Categoria{
+CARAC_ESPEC,
 ID,
 INTCON,
 REALCON,
@@ -56,6 +57,7 @@ ERRO} CATEGORIA;
 */
 char Categorias[][12]=
 {
+	"CARAC_ESPEC",
 	"ID",
 	"INTCON",
 	"REALCON",
