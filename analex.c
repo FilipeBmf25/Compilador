@@ -1,3 +1,11 @@
+/*
+Universidade do Estado da Bahia
+Alunos: Adriano da Silva Maurício
+		Filipe Bomfim Santos Furtado
+Disciplina: Compiladores
+Professora: Maria Inês
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,7 +37,7 @@ Token AnalisadorLexico(FILE *fp){
 					case 0 :
 						ch=getc(fp);
 
-						if (isalpha(ch)){
+						if (isalpha(ch)){  
 							buffer[strlen(buffer)] = ch;
 							estado = 1;
 
@@ -47,7 +55,7 @@ Token AnalisadorLexico(FILE *fp){
 							buffer[strlen(buffer)] = ch;
 							estado = 13;
 
-						}else if (ch == '"'){
+						}else if (ch == '\"'){
 							estado = 14;
 
 						}else if (ch == '.'){
@@ -214,23 +222,20 @@ Token AnalisadorLexico(FILE *fp){
 							estado = 11;
 							
 						}else if ((isprint(ch)) && (ch != '\\')){ // leitura de algo printavel diferente de /
-							buffer[strlen(buffer)] = ch;
+							buffer[0] = ch;
 							estado = 10;
 							
-						}else if(ch == '\\'){// leitura do /
+						}else if(ch == '\\'){// leitura da barra invertida
 							ch=getc(fp);
 							if(ch=='\'') {
-								buffer[strlen(buffer)] = '\'';
-								estado = 10;	
+						        buffer[0]='\'';
+								estado = 10;
 							}else if(ch=='n'){
-								buffer[strlen(buffer)]='\n';	
+								buffer[0]='\n';	
 								estado = 10;
 							} 
 							else if(ch=='0') {
-								buffer[strlen(buffer)]='\0';	
-								estado = 10;
-							}else if(ch=='\''){				 // RESOLVER O BARRA AQUI				
-								buffer[strlen(buffer)]='\\';	
+								buffer[0]='\0';	
 								estado = 10;								
 							}else {
 								tk.cat = ERRO;
@@ -239,7 +244,6 @@ Token AnalisadorLexico(FILE *fp){
 							}
 																			
 						}else{
-									estado = -1;
 									tk.cat = ERRO;
 									strcpy(tk.valor.s,"ERRO LEXICO");
 									return (tk);
@@ -249,12 +253,17 @@ Token AnalisadorLexico(FILE *fp){
 
 					case 10 :
 						ch=getc(fp);
-
-						if (ch == '\''){ // delimitador final de CARACON
-							estado = 11;
+						if((ch=='\'')&&(buffer[0]!='\'')){
+							estado = 11;	
+							break;
 						}
-						else{
-							estado = -1;
+						if ((ch == '\'') && (buffer[0]=='\'')){ // delimitador final de CARACON
+							estado = 11;
+						} else if ((ch != '\'') && (buffer[0]=='\'')){
+							buffer[0]='\\';
+							if(ch=='\n') ungetc(ch,fp);
+							estado = 11;
+						}else{
 							tk.cat = ERRO;
 							strcpy(tk.valor.s,"ERRO LEXICO");
 							return (tk);
@@ -279,7 +288,7 @@ Token AnalisadorLexico(FILE *fp){
 
 
 					case 12 : // TRATANDO O \N
-						tk.cat=CARACON;
+						tk.cat=CARAC_ESPEC;
 						tk.valor.numInt=CR;
 						return (tk);
 
@@ -298,6 +307,11 @@ Token AnalisadorLexico(FILE *fp){
 									buffer[strlen(buffer)] = '\\';	
 									buffer[strlen(buffer)] = ch;	
 							}
+						}else if(ch==EOF){
+							tk.cat = ERRO;
+							strcpy(tk.valor.s,"ERRO LEXICO");
+							return (tk);							
+						
 						}else buffer[strlen(buffer)] = ch;
 						
 					break;
@@ -560,11 +574,11 @@ int main(int argc, char *argv[]) {
 	Token tk;
 	int linha=0;
 	
-	printf("Teste\" ");
+	printf("[ANALEX LINGUAGEM PL]\n\n");
 	
 	system("color f0");
 
-	if((fp = fopen("Teste Filipe.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n");
+	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n");
 	printf("\n%d.  ",linha);
 	do{
 
@@ -580,14 +594,12 @@ int main(int argc, char *argv[]) {
 		else if(tk.cat==CARACON){
 			if(tk.valor.numInt==CR){
 				printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
-				printf("\n%d.  ",++linha);
-			} 
-			else if(tk.valor.numInt==NUL) printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
+			}else if(tk.valor.numInt==NUL) printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
 			else printf("<%s, %c> ",Categorias[tk.cat],tk.valor.c);
 		}else if(tk.cat==CADEIACON) printf("<%s, %s> ",Categorias[tk.cat],stringsPL[tk.valor.numInt]);
+		else if((tk.cat==CARAC_ESPEC) && (tk.valor.numInt == CR)) printf("\n%d.  ",++linha);
 		else if(tk.cat==COMENTARIO) printf("<%s, %s> ",Categorias[tk.cat],stringsPL[tk.valor.numInt]);
 		else if(tk.cat==DELIMITADOR) printf("<%s, %s> ",Categorias[tk.cat],Delimitadores[tk.valor.numInt]);
-		else if(tk.cat==CARAC_ESPEC) printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
 		else if(tk.cat==ERRO) {
 			system("color f4");
 			printf("\n\n\n--------------------------------");

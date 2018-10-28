@@ -1,3 +1,13 @@
+/*
+Universidade do Estado da Bahia
+Alunos: Adriano da Silva Maurício
+		Filipe Bomfim Santos Furtado
+Disciplina: Compiladores
+Professora: Maria Inês
+*/
+
+
+
 
 /*
 ** Vetor de Palavras Reservadas da Linguagem
@@ -150,7 +160,7 @@ typedef enum DELIMITADORES{
 }DELIMITADORES;
 
 /*
-** Vetor que atribui aos Caracteres \n e \0 o seu valor em formato String
+** Vetor que atribui aos Delimitadores o seu valor em formato String
 */
 char Delimitadores[][15]=
 {
@@ -185,6 +195,10 @@ char OperadoresAritmeticos[][15]=
 	"DIVISAO"
 };
 
+
+/*
+** Struct para os tokens da Linguagem PL
+*/
 typedef struct token {
 	CATEGORIA cat;
 	union valor {
@@ -197,7 +211,7 @@ typedef struct token {
 
 
 /*
-** Retorna um inteiro, onde (1) é uma Palavra Reservada e (0) não é
+** Adequação da Busca Binária Recursiva para verificação se o token é uma palavra reservada da Linguagem PL ou não
 */
 int isPalavraReservada(char *buffer, int menor, int maior);
 
