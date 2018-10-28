@@ -11,9 +11,9 @@ Professora: Maria Inês
 #include <string.h>
 #include "analex.h"
 
-int indiceString=0;
+int indiceString=0; // INDICE DO VETOR DE STRINGS
 
-int isPalavraReservada(char *buffer, int menor, int maior){
+int isPalavraReservada(char *buffer, int menor, int maior){ // RECONHECIMENTO DE PALAVRAS RESERVADAS
    int meio, cmp;
    if (menor > maior) return -1;
    meio = (menor + maior) / 2;
@@ -24,10 +24,10 @@ int isPalavraReservada(char *buffer, int menor, int maior){
 }
 
 Token AnalisadorLexico(FILE *fp){
-	Token tk;
-	char buffer[256]="";
-	char ch;
-	int estado = 0;
+	Token tk; // TOKEN
+	char buffer[256]=""; // BUFFER PARA ARMAZENAR O TOKEN A SER RETORNADO
+	char ch; // CARACTERE A SER ANALISADO PELOS ESTADOS
+	int estado = 0; // ESTADOS DO AUTOMATO
 	int indice;
 
 		while (estado>=0){
@@ -200,7 +200,7 @@ Token AnalisadorLexico(FILE *fp){
 					break;
 
 
-					case 7:
+					case 7: // RECONHECIMENTO DE FLOAT
 						ch=getc(fp);
 						if(isdigit(ch)){
 							buffer[strlen(buffer)] = ch;
@@ -210,7 +210,7 @@ Token AnalisadorLexico(FILE *fp){
 					break;
 
 
-					case 8:
+					case 8: // GERANDO UM TOKEN FLOAT
 						ungetc(ch,fp);
 						tk.cat = REALCON;
 						tk.valor.numFloat = atof(buffer);
@@ -230,14 +230,14 @@ Token AnalisadorLexico(FILE *fp){
 							if(ch=='\'') {
 						        buffer[0]='\'';
 								estado = 10;
-							}else if(ch=='n'){
+							}else if(ch=='n'){ // leitura do \n
 								buffer[0]='\n';	
 								estado = 10;
 							} 
-							else if(ch=='0') {
+							else if(ch=='0') { // leitura do \0
 								buffer[0]='\0';	
 								estado = 10;								
-							}else {
+							}else { // erro após a leitura do '\\'
 								tk.cat = ERRO;
 								strcpy(tk.valor.s,"ERRO LEXICO");
 								return(tk);
@@ -251,7 +251,7 @@ Token AnalisadorLexico(FILE *fp){
 						
 					    break;
 
-					case 10 :
+					case 10 : // RECONHECIMENTO DE CARACON
 						ch=getc(fp);
 						if((ch=='\'')&&(buffer[0]!='\'')){
 							estado = 11;	
@@ -411,12 +411,12 @@ Token AnalisadorLexico(FILE *fp){
 						estado = 0;
 					break;
 
-					case 25 :
+					case 25 : //RECONHECIMENTO DA MULTIPLICAÇÃO
 						tk.cat=OPARIT;
 						tk.valor.numInt = MULTIPLICACAO;
 					return (tk);
 
-					case 27 :
+					case 27 : //RECONHECIMENTO DA DIVISÃO OU COMENTÁRIO
 						ch=getc(fp);
 						if(ch=='/') estado = 29;
 						else estado = 28;
@@ -438,7 +438,7 @@ Token AnalisadorLexico(FILE *fp){
 						else buffer[strlen(buffer)] = ch;
 					break;
 
-					case 30 :
+					case 30 : //RECONHECIMENTO DE COMENTARIO
 							strcpy(stringsPL[indiceString],buffer);
 							tk.cat=COMENTARIO;
 							tk.valor.numInt=indiceString++;		
@@ -446,7 +446,7 @@ Token AnalisadorLexico(FILE *fp){
 					return (tk);
 
 
-					case 31 :
+					case 31 ://RECONHECIMENTO DO MENOS ( - )
 						tk.cat=OPARIT;
 						tk.valor.numInt = MENOS;
 					return (tk);
@@ -458,106 +458,106 @@ Token AnalisadorLexico(FILE *fp){
 					return (tk);
 
 
-					case 33 :
+					case 33 : //RECONHECIMENTO DO DIFERENTE ( # )
 						tk.cat=OPREL;
 						tk.valor.numInt = DIFERENTE;
 					return (tk);
 
 
-					case 34 :
+					case 34 : //RECONHECIMENTO DO MAIOR OU  MAIOR IGUAL
 						ch=getc(fp);
 						if(ch=='=') estado = 35;
 						else estado = 36;
 					break;
 
 
-					case 35 :
+					case 35 : //RECONHECIMENTO DO MAIOR IGUAL (>=)
 						tk.cat = OPREL;
 						tk.valor.numInt = MAIORIGUAL;
 					return (tk);
 
 
-					case 36 :
+					case 36 : //RECONHECIMENTO DO MAIOR (>)
 						ungetc(ch,fp);
 						tk.cat = OPREL;
 						tk.valor.numInt = MAIOR;
 					return (tk);
 
 
-					case 37 :
+					case 37 : //RECONHECIMENTO DO MENOR OU  MENOR IGUAL
 						ch=getc(fp);
 						if(ch=='=') estado = 38;
 						else estado = 39;
 					break;
 
 
-					case 38 :
+					case 38 ://RECONHECIMENTO DO MENOR IGUAL (<=)
 						tk.cat = OPREL;
 						tk.valor.numInt = MENORIGUAL;
 					return (tk);
 
 
-					case 39 :
+					case 39 : //RECONHECIMENTO DO MENOR  (<)
 						ungetc(ch,fp);
 						tk.cat = OPREL;
 						tk.valor.numInt = MENOR;
 					return (tk);
 
 
-					case 40 :
+					case 40 : //RECONHECIMENTO DA ATRIBUIÇAO OU COMPARACAO 
 						ch=getc(fp);
 						if(ch=='=') estado = 41;
 						else estado = 42;
 					break;
 
 
-					case 41 :
+					case 41 : // RECONHECIMENTO DA COMPARACAO ( == )
 						tk.cat = OPREL;
 						tk.valor.numInt = IGUALIGUAL;
 					return (tk);
 
-					case 42 :
+					case 42 : // RECONHECIMENTO DA ATRIBUICAO ( = )
 						ungetc(ch,fp);
 						tk.cat = OPREL;
 						tk.valor.numInt = IGUAL;
 					return (tk);
 
-					case 43 :
+					case 43 : // RECONHECIMENTO DO ABRE CHAVE ( { )
 						tk.cat = DELIMITADOR;
 						tk.valor.numInt = A_CHAVES;
 					return (tk);
 
 					case 44 :
-						tk.cat = DELIMITADOR;
+						tk.cat = DELIMITADOR; // RECONHECIMENTO DO FECHA CHAVE ( } )
 						tk.valor.numInt = F_CHAVES;
 					return (tk);
 
 					case 45 :
-						tk.cat = DELIMITADOR;
+						tk.cat = DELIMITADOR; // RECONHECIMENTO DO ABRE PARENTESE ( ( )
 						tk.valor.numInt = A_PARENT;
 					return (tk);
 
 					case 46 :
-						tk.cat = DELIMITADOR;
+						tk.cat = DELIMITADOR; // RECONHECIMENTO DO FECHA PARENTESE ( ) )
 						tk.valor.numInt = F_PARENT;
 					return (tk);
 
-					case 47 :
+					case 47 : // RECONHECIMENTO DO ABRE COLCHETES ( [ )
 						tk.cat = DELIMITADOR;
 						tk.valor.numInt = A_COLCH;
 					return (tk);
 
-					case 48 :
+					case 48 : // RECONHECIMENTO DO FECHA COLCHETES ( ] )
 						tk.cat = DELIMITADOR;
 						tk.valor.numInt = F_COLCH;
 					return (tk);
 
-					case 49 :
+					case 49 : // RECONHECIMENTO DA VIRGULA ( , )
 						tk.cat = DELIMITADOR;
 						tk.valor.numInt = VIRG;
 					return (tk);
 
-					case 50 :
+					case 50 : // RECONHECIMENTO DO PONTO E VIRGULA ( ; )
 						tk.cat = DELIMITADOR;
 						tk.valor.numInt = PT_VIRG;
 					return (tk);
@@ -572,17 +572,17 @@ int main(int argc, char *argv[]) {
 
 	FILE *fp;
 	Token tk;
-	int linha=0;
+	int linha=0; 
 	
 	printf("[ANALEX LINGUAGEM PL]\n\n");
 	
 	system("color f0");
 
-	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n");
+	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
 	printf("\n%d.  ",linha);
 	do{
 
-		tk = AnalisadorLexico(fp);
+		tk = AnalisadorLexico(fp); // CHAMANDO A FUNÇÃO ANALEX
 
 		if(tk.cat==PR) printf("<%s, %s> ", Categorias[tk.cat],(toupper(PalavrasReservadas[tk.valor.numInt])));
 		else if(tk.cat==ID) printf("<%s, %s> ",Categorias[tk.cat],tk.valor.s);
