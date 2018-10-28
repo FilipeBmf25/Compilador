@@ -452,7 +452,7 @@ Token AnalisadorLexico(FILE *fp){
 					return (tk);
 
 
-					case 32 :
+					case 32 : //RECONHECIMENTO DO MAIS ( + )
 						tk.cat=OPARIT;
 						tk.valor.numInt = MAIS;
 					return (tk);
@@ -584,6 +584,8 @@ int main(int argc, char *argv[]) {
 
 		tk = AnalisadorLexico(fp); // CHAMANDO A FUNÇÃO ANALEX
 
+		//IMPRESSÃO DOS TOKENS
+		
 		if(tk.cat==PR) printf("<%s, %s> ", Categorias[tk.cat],(toupper(PalavrasReservadas[tk.valor.numInt])));
 		else if(tk.cat==ID) printf("<%s, %s> ",Categorias[tk.cat],tk.valor.s);
 		else if(tk.cat==OPREL) printf("<%s, %s> ",Categorias[tk.cat],OperadoresRelacionais[tk.valor.numInt]);
