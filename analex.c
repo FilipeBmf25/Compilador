@@ -51,10 +51,6 @@ Token AnalisadorLexico(FILE *fp){
 						}else if (ch == '\n'){
 							estado = 12;
 
-						}else if (ch == '\0'){
-							buffer[strlen(buffer)] = ch;
-							estado = 13;
-
 						}else if (ch == '\"'){
 							estado = 14;
 
@@ -261,7 +257,7 @@ Token AnalisadorLexico(FILE *fp){
 							estado = 11;
 						} else if ((ch != '\'') && (buffer[0]=='\'')){
 							buffer[0]='\\';
-							if(ch=='\n') ungetc(ch,fp);
+							ungetc(ch,fp);
 							estado = 11;
 						}else{
 							tk.cat = ERRO;
@@ -273,15 +269,15 @@ Token AnalisadorLexico(FILE *fp){
 
 					case 11 : // GERANDO UM TOKEN CARACON
 						if(buffer[0] == '\0'){
-							tk.cat = CARACON;
+							tk.cat = CARACCON;
 							tk.valor.numInt = NUL;
 							return(tk);
 						}else if (buffer[0] == '\n'){
-							tk.cat = CARACON;
+							tk.cat = CARACCON;
 							tk.valor.numInt = CR;
 							return(tk);
 						}else{
-							tk.cat = CARACON;
+							tk.cat = CARACCON;
 							tk.valor.c = buffer[0];
 							return(tk);
 						}
@@ -293,7 +289,7 @@ Token AnalisadorLexico(FILE *fp){
 						return (tk);
 
 					break;
-
+					
 					case 14 : //RECONHECIMENTO DE CADEIACON
 					ch=getc(fp);
 						if (ch == '\"'){
@@ -593,7 +589,7 @@ int main(int argc, char *argv[]) {
 		else if(tk.cat==OPLOG) printf("<%s, %s> ",Categorias[tk.cat],OperadoresLogicos[tk.valor.numInt]);
 		else if(tk.cat==INTCON) printf("<%s, %d> ",Categorias[tk.cat],tk.valor.numInt);
 		else if(tk.cat==REALCON) printf("<%s, %.2f> ",Categorias[tk.cat],tk.valor.numFloat);
-		else if(tk.cat==CARACON){
+		else if(tk.cat==CARACCON){
 			if(tk.valor.numInt==CR){
 				printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
 			}else if(tk.valor.numInt==NUL) printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
