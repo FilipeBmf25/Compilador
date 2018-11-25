@@ -6,7 +6,33 @@ Disciplina: Compiladores
 Professora: Maria Inês
 */
 
-
+typedef enum PalavraReservada{
+BOOL,	
+CALL,
+CHAR,
+DISPLAY,
+DUP,
+ELSE,	
+ENDFOR,
+ENDFUNC,
+ENDIF,
+ENDPROG,
+ENDVAR,
+ENDWHILE,
+FOR,
+FWD,
+IF,
+INT,
+KEYBOARD,
+NDPROC,
+NOPARAM,
+PL,
+PROC,
+PROG,
+REAL,
+RETURN,
+VAR,
+WHILE} PALAVRARESERVADA;
 
 
 /*

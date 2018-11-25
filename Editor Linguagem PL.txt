@@ -1,13 +1,1 @@
-prog{
-	int num = 3;
-	float f = 5.60;
-	char c = '\';
-
-	if(c=='\n'.or.c=='\0'){
-	c='';
-	}
-
-	num = -[f*num+5];
-	display("Hello \"WORD\"");
-
-}endprog
+pl phelps var char t,k int x,l real ver,u,t endvar 

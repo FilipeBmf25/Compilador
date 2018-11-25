@@ -564,50 +564,5 @@ Token AnalisadorLexico(FILE *fp){
 
 }
 
-int main(int argc, char *argv[]) {
-
-	FILE *fp;
-	Token tk;
-	int linha=0; 
-	
-	printf("[ANALEX LINGUAGEM PL]\n\n");
-	
-	system("color f0");
-
-	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
-	printf("\n%d.  ",linha);
-	do{
-
-		tk = AnalisadorLexico(fp); // CHAMANDO A FUNÇÃO ANALEX
-
-		//IMPRESSÃO DOS TOKENS
-		
-		if(tk.cat==PR) printf("<%s, %s> ", Categorias[tk.cat],(toupper(PalavrasReservadas[tk.valor.numInt])));
-		else if(tk.cat==ID) printf("<%s, %s> ",Categorias[tk.cat],tk.valor.s);
-		else if(tk.cat==OPREL) printf("<%s, %s> ",Categorias[tk.cat],OperadoresRelacionais[tk.valor.numInt]);
-		else if(tk.cat==OPARIT) printf("<%s, %s> ",Categorias[tk.cat],OperadoresAritmeticos[tk.valor.numInt]);
-		else if(tk.cat==OPLOG) printf("<%s, %s> ",Categorias[tk.cat],OperadoresLogicos[tk.valor.numInt]);
-		else if(tk.cat==INTCON) printf("<%s, %d> ",Categorias[tk.cat],tk.valor.numInt);
-		else if(tk.cat==REALCON) printf("<%s, %.2f> ",Categorias[tk.cat],tk.valor.numFloat);
-		else if(tk.cat==CARACCON){
-			if(tk.valor.numInt==CR){
-				printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
-			}else if(tk.valor.numInt==NUL) printf("<%s, %s> ",Categorias[tk.cat],Especiais[tk.valor.numInt]);
-			else printf("<%s, %c> ",Categorias[tk.cat],tk.valor.c);
-		}else if(tk.cat==CADEIACON) printf("<%s, %s> ",Categorias[tk.cat],stringsPL[tk.valor.numInt]);
-		else if((tk.cat==CARAC_ESPEC) && (tk.valor.numInt == CR)) printf("\n%d.  ",++linha);
-		else if(tk.cat==COMENTARIO) printf("<%s, %s> ",Categorias[tk.cat],stringsPL[tk.valor.numInt]);
-		else if(tk.cat==DELIMITADOR) printf("<%s, %s> ",Categorias[tk.cat],Delimitadores[tk.valor.numInt]);
-		else if(tk.cat==ERRO) {
-			system("color f4");
-			printf("\n\n\n--------------------------------");
-			printf("\n[!]ERRO: TOKEN INVALIDO NA LINHA %d",linha);
-		}
-	}while((tk.cat!=FIM)&&(tk.cat!=ERRO));
-
-	fclose(fp);
-	
-	return 0;
-}
 
 
