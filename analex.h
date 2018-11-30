@@ -16,6 +16,7 @@ ELSE,
 ENDFOR,
 ENDFUNC,
 ENDIF,
+ENDPROC,
 ENDPROG,
 ENDVAR,
 ENDWHILE,
@@ -38,7 +39,7 @@ WHILE} PALAVRARESERVADA;
 /*
 ** Vetor de Palavras Reservadas da Linguagem
 */
-char PalavrasReservadas[][10]=
+char PalavrasReservadas[][12]=
 {
 	"bool",	
 	"call",
@@ -49,6 +50,7 @@ char PalavrasReservadas[][10]=
 	"endfor",
 	"endfunc",
 	"endif",
+	"endproc",
 	"endprog",
 	"endvar",
 	"endwhile",

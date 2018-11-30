@@ -154,7 +154,51 @@ void func(){
 }	
 
 void proc(){
-	
+	getToken();
+	if((tk.cat!=PR)||(tk.valor.numInt!=PROC)) Erro(7);
+	getToken();
+	if(tk.cat==ID){
+		getToken();
+		if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=A_PARENT)){
+			Erro(3);	
+		}else {
+			tipos_param();
+			if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=F_PARENT)){
+				Erro(4);
+			}else{
+				getToken();
+				while((tk.valor.numInt!=ENDPROC)&&
+					 (tk.valor.numInt!=IF) &&
+					 (tk.valor.numInt!=WHILE) &&
+					 (tk.valor.numInt!=FOR) &&
+					 (tk.valor.numInt!=RETURN) &&
+					 (tk.valor.numInt!=CALL) &&
+					 (tk.valor.numInt!=PT_VIRG) &&
+					 (tk.valor.numInt!=KEYBOARD) &&
+					 (tk.valor.numInt!=DISPLAY) &&
+					 (tk.cat!=ID)) {
+					
+						tipo();
+						getToken();
+						decl_var();
+						getToken();
+						while(tk.valor.numInt==VIRG){
+							getToken();
+							decl_var();
+							getToken();
+						}				
+				}
+				
+				while(tk.valor.numInt!=ENDPROC){
+				//	cmd();
+					getToken();
+				}
+				
+			}
+		}
+	}else{
+		Erro(7);
+	}
 }
 
 void atrib(){
@@ -200,7 +244,7 @@ int main(int argc, char *argv[]) {
 	system("color f0");
 
 	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
-	func();
+	proc();
 	Erro(0);
 	
 

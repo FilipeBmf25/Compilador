@@ -1,1 +1,1 @@
-char funcao (char teste) teste
+ funcao (char teste)  endproc

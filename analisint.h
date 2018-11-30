@@ -1,5 +1,5 @@
 char erros[][50] = {
-	"Sem erro", //Erro 0
+	"0 - Programa sem erro", //Erro 0
 	"Caracter invalido!", //Erro 1
  	"Formato de numero invalido!", //Erro 2
 	"Faltando abre parenteses!", //Erro 3
