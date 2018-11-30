@@ -1,1 +1,1 @@
-pl phelps var char t,k int x,l real ver,u,t endvar 
+char funcao (char teste) teste
