@@ -201,19 +201,57 @@ void proc(){ // Inicio da função proc ()
 	}
 }
 
+
 void atrib(){
-	getToken();
 	if(!(tk.cat==ID))Erro(7);
 	getToken();
 	if(!((tk.cat==OPREL)&&(tk.valor.numInt==IGUAL)))Erro(7);
 	//expr(fp);
 }
 
-void oprel(){
+void expr(){
+	expr_simp();
 	getToken();
-	if(!(tk.cat==OPREL)) Erro(7);
-	if(!((tk.valor.numInt==IGUALIGUAL)||(tk.valor.numInt==DIFERENTE)||(tk.valor.numInt==MENORIGUAL)||(tk.valor.numInt==MAIORIGUAL)||
-	(tk.valor.numInt==MENORIGUAL)||(tk.valor.numInt==MENOR)||(tk.valor.numInt==MAIOR))) Erro(7);
+	if(tk.cat==OPREL) {
+		oprel();
+		expr_simp();	
+	}
+}
+
+void expr_simp(){
+	if((tk.valor.numInt==MAIS)||(tk.valor.numInt==MENOS)){
+		getToken();
+	}
+	termo();
+	getToken();
+	while((tk.valor.numInt==MAIS)||(tk.valor.numInt==MENOS)||(tk.valor.numInt==OR)){
+		getToken();
+		termo();
+		getToken();
+	}
+		//VERIFICAR O QUE FOI PEGO AO SAIR DO LAÇO
+}
+
+void termo(){
+	fator();
+	getToken();
+	while((tk.valor.numInt==MULTIPLICACAO)||(tk.valor.numInt==DIVISAO)||(tk.valor.numInt==AND)){
+		getToken();
+		fator();
+		getToken();
+	}
+	
+	//VERIFICAR O QUE FOI PEGO AO SAIR DO LAÇO	
+}
+
+void fator(){
+	getToken();
+	
+}
+
+void oprel(){
+	if(tk.cat!=OPREL)) Erro(7);
+	if(tk.valor.numInt==IGUAL) Erro(7);
 }
 
 void tipos_param(){ // Inicio da função tipo param
@@ -234,6 +272,8 @@ void tipos_param(){ // Inicio da função tipo param
 		
 	}
 }
+
+
 
 int main(int argc, char *argv[]) {
 	
