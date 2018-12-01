@@ -8,32 +8,32 @@
 Token tk ;
 FILE *fp;
 
-void getToken(){
+void getToken(){ // Retorna o próximo Token do ANALEX
 	tk=AnalisadorLexico(fp);
 }
 
-void Erro(int e) {
+void Erro(int e) { // Função de retorno de mensagem de erro
 	if(e>0) system("color f4");
 	else system("color f2");
 	printf("Erro: %s\n", erros[e]);
 	exit(e);
 }
 
-void prog(){
+void prog(){ // Inicio da função PROG 
 	getToken();
-	if((tk.cat==PR)&&(tk.valor.numInt==PL)){
+	if((tk.cat==PR)&&(tk.valor.numInt==PL)){ // Compara o token retornado com o token obrigatório PL
 	
 	getToken(fp);
-	if(tk.cat==ID){
+	if(tk.cat==ID){// Compara o token retornado com o token obrigatório ID
 		getToken();
-		if((tk.cat==PR)&&(tk.valor.numInt==VAR)){
+		if((tk.cat==PR)&&(tk.valor.numInt==VAR)){ // Análise do token para verificar a existência de VAR no prog
 			getToken();
-			while(tk.valor.numInt!=ENDVAR){
+			while(tk.valor.numInt!=ENDVAR){ // Laço para determinar se existe nenhuma,uma ou mais de uma declaração de variável
 				tipo();
 				getToken();
 				decl_var();
 				getToken();
-				while(tk.valor.numInt==VIRG){
+				while(tk.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
 					getToken();
 					decl_var();
 					getToken();
@@ -52,74 +52,74 @@ void prog(){
 		
 		
 	}else{
-		Erro(7);
+		Erro(7); // Mensagem de erro caso não exista ID
 	}
 	
 	}else {
-		Erro(7);
+		Erro(7); // Mensagem de erro caso não exista PL
 	}
 	
 	
 }
 							
-void decl_var(){
-	if(tk.cat!=ID) Erro(7); 
+void decl_var(){ // Função para comparar se o token é um ID
+	if(tk.cat!=ID) Erro(7); // Mensagem de erro caso não for ID
 }		
 
-void tipo(){
+void tipo(){ // Função para determinar se o token é uma palavra reservada CHAR, INT, REAL OU BOOL
 	if(tk.cat==PR){
 		if(!((tk.valor.numInt==CHAR) || (tk.valor.numInt==INT) || (tk.valor.numInt==REAL) || (tk.valor.numInt==BOOL))) Erro(7);
 	}else {
-		Erro(7);
+		Erro(7); // Mensagem de erro caso não seja nenhuma das 4 palavras reservadas
 	}	
 }
 
-void fwd(){
+void fwd(){ // Função FWD ( pode começar com proc ou tipo())
      getToken();
-     if((tk.cat==PR)&&(tk.valor.numInt==PROC)){
+     if((tk.cat==PR)&&(tk.valor.numInt==PROC)){ // Compara o token retornado com PROC
          getToken();                                                                     
      }else{
-         tipo();
+         tipo(); // Compara o token retornado com as exigências da função Tipo()
          getToken();
      } 
-     if(tk.cat==ID){
+     if(tk.cat==ID){ // Compara se o próximo Token é um ID
           getToken();
-          if((tk.cat==DELIMITADOR)&&(tk.valor.numInt==A_PARENT)){
+          if((tk.cat==DELIMITADOR)&&(tk.valor.numInt==A_PARENT)){ // Verfica a existência obrigatória de um abre parênteses
                 getToken();
-                if((tk.cat==PR)&&(tk.valor.numInt==NOPARAM)){
+                if((tk.cat==PR)&&(tk.valor.numInt==NOPARAM)){ // Verifica se não existe parâmetro
                       getToken();                                      
                 }else{
-                      tipo();
+                      tipo(); // Compara o token retornado com as exigências da função Tipo()
                       getToken();
-                      while(tk.valor.numInt==VIRG){
+                      while(tk.valor.numInt==VIRG){ // Verifica se é uma VIRGULA para determinar mais tipos
                           getToken();
-					      tipo();
+					      tipo(); // // Compara o token retornado com as exigências da função Tipo() ( NESTE CASO JÁ FOI DECLARADO PELO MENOS UMA VEZ )
 					      getToken();
 				      }
                 } 
-                if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=F_PARENT)) Erro(4);
+                if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=F_PARENT)) Erro(4); // Compara de após a definição do parametro, aparece o token obrigatório fecha parênteses
                                                            
-          }else Erro(3);         
+          }else Erro(3); // Mensagem de erro caso não insira o Abre parênteses obrigatório         
      }else{
-           Erro(7);
+           Erro(7); // Mensagem de erro caso não exista ID
      }                                                                                   
 }	
 
-void func(){
+void func(){ // Inicio da função func ()
 	getToken();
-	tipo();
+	tipo();// Compara o token retornado com as exigências da função Tipo()
 	getToken();
-	if(tk.cat==ID){
+	if(tk.cat==ID){ // Compara se o próximo Token é um ID
 		getToken();
-		if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=A_PARENT)){
+		if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=A_PARENT)){ // Verfica a existência obrigatória de um abre parênteses
 			Erro(3);	
 		}else {
-			tipos_param();
-			if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=F_PARENT)){
+			tipos_param(); // Compara o token retornado com as exigências da função tipos_param()
+			if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=F_PARENT)){ // Verfica a existência obrigatória de um fecha parênteses
 				Erro(4);
 			}else{
 				getToken();
-				while((tk.valor.numInt!=ENDFUNC)&&
+				while((tk.valor.numInt!=ENDFUNC)&& // Compara o token retornado com as exigências do while() ( ELES CONTENPLAM O INICIO DE UM CMD )
 					 (tk.valor.numInt!=IF) &&
 					 (tk.valor.numInt!=WHILE) &&
 					 (tk.valor.numInt!=FOR) &&
@@ -130,18 +130,18 @@ void func(){
 					 (tk.valor.numInt!=DISPLAY) &&
 					 (tk.cat!=ID)) {
 					
-						tipo();
+						tipo();// Compara o token retornado com as exigências da função Tipo()
 						getToken();
-						decl_var();
+						decl_var(); // Função para comparar se o token é um ID
 						getToken();
-						while(tk.valor.numInt==VIRG){
+						while(tk.valor.numInt==VIRG){ // Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel do mesmo tipo
 							getToken();
-							decl_var();
+							decl_var(); // Função para comparar se o token é um ID
 							getToken();
 						}				
 				}
 				
-				while(tk.valor.numInt!=ENDFUNC){
+				while(tk.valor.numInt!=ENDFUNC){ // Verifica a existência obrigátorio do token ENDFUNC para fim de função
 				//	cmd();
 					getToken();
 				}
@@ -149,25 +149,25 @@ void func(){
 			}
 		}
 	}else{
-		Erro(7);
+		Erro(7); // Mensagem de erro caso não exista ID
 	}
 }	
 
-void proc(){
+void proc(){ // Inicio da função proc ()
 	getToken();
-	if((tk.cat!=PR)||(tk.valor.numInt!=PROC)) Erro(7);
+	if((tk.cat!=PR)||(tk.valor.numInt!=PROC)) Erro(7); // Compara o token retornado com proc
 	getToken();
-	if(tk.cat==ID){
+	if(tk.cat==ID){// Compara se o próximo Token é um ID
 		getToken();
-		if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=A_PARENT)){
+		if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=A_PARENT)){// Verfica a existência obrigatória de um abre parênteses
 			Erro(3);	
 		}else {
-			tipos_param();
-			if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=F_PARENT)){
+			tipos_param();// Compara o token retornado com as exigências da função tipos_param()
+			if((tk.cat!=DELIMITADOR)&&(tk.valor.numInt!=F_PARENT)){// Verfica a existência obrigatória de um fecha parênteses
 				Erro(4);
 			}else{
 				getToken();
-				while((tk.valor.numInt!=ENDPROC)&&
+				while((tk.valor.numInt!=ENDPROC)&& // Compara o token retornado com as exigências do while() ( ELES CONTENPLAM O INICIO DE UM CMD )
 					 (tk.valor.numInt!=IF) &&
 					 (tk.valor.numInt!=WHILE) &&
 					 (tk.valor.numInt!=FOR) &&
@@ -178,18 +178,18 @@ void proc(){
 					 (tk.valor.numInt!=DISPLAY) &&
 					 (tk.cat!=ID)) {
 					
-						tipo();
+						tipo(); // Compara o token retornado com as exigências da função Tipo()
 						getToken();
-						decl_var();
+						decl_var(); // Função para comparar se o token é um ID
 						getToken();
-						while(tk.valor.numInt==VIRG){
+						while(tk.valor.numInt==VIRG){ // Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel do mesmo tipo
 							getToken();
-							decl_var();
+							decl_var();// Função para comparar se o token é um ID
 							getToken();
 						}				
 				}
 				
-				while(tk.valor.numInt!=ENDPROC){
+				while(tk.valor.numInt!=ENDPROC){ // Verifica a existência obrigátorio do token ENDPROC para fim do procedimento
 				//	cmd();
 					getToken();
 				}
@@ -216,19 +216,19 @@ void oprel(){
 	(tk.valor.numInt==MENORIGUAL)||(tk.valor.numInt==MENOR)||(tk.valor.numInt==MAIOR))) Erro(7);
 }
 
-void tipos_param(){
+void tipos_param(){ // Inicio da função tipo param
 	getToken();
-	if(tk.cat!=PR) Erro(7);
-	if(tk.valor.numInt!=NOPARAM){
-		tipo();
+	if(tk.cat!=PR) Erro(7); // Verifica se o token é uma palavra reservada
+	if(tk.valor.numInt!=NOPARAM){ // Verifica se a palavra reservada é noparam
+		tipo(); // Caso não seja noparam, verifica se contempla as exigências da função tipo()
 		getToken();
-		if(tk.cat!=ID) Erro(7);
+		if(tk.cat!=ID) Erro(7); // Verifica a existência obrigatória de um ID
 		getToken();
-		while(tk.valor.numInt==VIRG){
+		while(tk.valor.numInt==VIRG){  // laço para verificar a existência de mais de uma declaração de tipo
 				getToken();
-				tipo();
+				tipo(); // Compara o token retornado com as exigências da função Tipo()
 				getToken();
-				if(tk.cat!=ID) Erro(7);
+				if(tk.cat!=ID) Erro(7); // Verifica a existência obrigatória de um ID após o tipo
 				getToken();
 		}
 		
