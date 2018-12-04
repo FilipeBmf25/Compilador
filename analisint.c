@@ -8,16 +8,24 @@
 Token tk ;
 Token tk_next;
 FILE *fp;
+int linha=1;
 
 void getToken(){ // Retorna o próximo Token do ANALEX
 	tk = tk_next;
 	tk_next=AnalisadorLexico(fp);
+	if(tk.valor.numInt==CR){
+		do{
+		tk = tk_next;
+		tk_next=AnalisadorLexico(fp);
+		linha ++;	
+		}while((tk.cat==CARAC_ESPEC)&&(tk.valor.numInt==CR));
+	}
 }
 
 void Erro(int e) { // Função de retorno de mensagem de erro
 	if(e>0) system("color f4");
 	else system("color f2");
-	printf("Erro: %s\n", erros[e]);
+	printf("Erro na linha %d: %s\n",linha, erros[e]);
 	exit(e);
 }
 
@@ -168,7 +176,7 @@ int main(int argc, char *argv[]) {
 	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
 	tk_next=AnalisadorLexico(fp);
 	
-	func();
+	prog();
 	Erro(0);
 	fclose(fp);
 	
