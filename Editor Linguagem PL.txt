@@ -1,1 +1,1 @@
- funcao (char teste)  endproc
+char teste(noparam) char i teste char i endfunc
