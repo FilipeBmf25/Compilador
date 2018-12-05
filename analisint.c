@@ -166,7 +166,112 @@ void proc(){
 }
 
 void cmd(){
-	
+	if(tk_next.valor.numInt==IF){
+		getToken();
+		
+	}else if(tk_next.valor.numInt==WHILE){
+		getToken();
+		
+	}else if(tk_next.valor.numInt==FOR){
+		getToken();
+		
+	}else if(tk_next.valor.numInt==RETURN){
+		getToken();
+		
+	}else if(tk_next.cat==ID) {
+		atrib();
+		
+	}else if(tk_next.valor.numInt==CALL){
+		getToken();
+		
+	}else if(tk_next.valor.numInt==PT_VIRG){
+		getToken();
+		
+	}else if(tk_next.valor.numInt==KEYBOARD){
+		getToken();
+		
+	}else if (tk_next.valor.numInt==DISPLAY){
+		getToken();
+		
+	}else Erro(19);
+}
+
+void atrib(){
+	getToken();
+	if(!(tk.cat==ID)) Erro(10);
+	getToken();
+	if(!(tk.cat==OPREL)) Erro(16);
+	if(!(tk.cat==IGUAL)) Erro(17);
+	expr();
+}
+
+void expr(){
+	expr_simp();
+	if(tk_next.cat==OPREL){
+		op_rel();
+		expr_simp();
+	}	
+}
+
+void expr_simp(){
+	if((tk_next.valor.numInt==MAIS)||(tk_next.valor.numInt==MENOS)){
+		getToken();
+	}
+	termo();
+	while((tk_next.valor.numInt==MAIS)||(tk_next.valor.numInt==MENOS)||(tk_next.valor.numInt==OR)){
+		getToken();
+		termo();
+	}
+}
+
+void termo(){
+	fator();
+	while((tk_next.valor.numInt==MULTIPLICACAO)||(tk_next.valor.numInt==DIVISAO)||(tk_next.valor.numInt==AND)){
+		getToken();
+		fator();
+	}
+}
+
+void fator(){
+	if(tk_next.cat==ID){
+		getToken();
+		if(tk_next.valor.numInt==A_PARENT){
+			getToken();
+			if((tk_next.valor.numInt==MAIS)||
+			(tk_next.valor.numInt==MENOS)||
+			(tk_next.valor.numInt==NOT)||
+			(tk_next.valor.numInt==A_PARENT)||
+			(tk_next.cat==ID)||
+			(tk_next.cat==INTCON)||
+			(tk_next.cat==REALCON)||
+			(tk_next.cat==CARACCON)){
+				expr();
+				while(tk_next.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
+						getToken();
+						expr();
+				}		
+			}
+			if(!(tk_next.valor.numInt==F_PARENT)) Erro(4);
+			getToken();
+		}
+	}else if(tk_next.cat==INTCON) getToken();
+		else if(tk_next.cat==REALCON) getToken();
+		else if(tk_next.cat==CARACCON) getToken();
+		else if(tk_next.valor.numInt==A_PARENT){
+			getToken();
+			expr();
+			getToken();
+			if(!(tk.valor.numInt==F_PARENT)) Erro(4);	
+		}else if(tk_next.valor.numInt==NOT){
+			getToken();
+			fator();
+		}else Erro(18);		
+}
+
+void op_rel(){
+	getToken();
+	if(!(tk.cat!=OPREL)) Erro(15);
+	if(tk.valor.numInt==IGUAL) Erro(16);
 }
 
 int main(int argc, char *argv[]) {
@@ -177,7 +282,7 @@ int main(int argc, char *argv[]) {
 	tk_next=AnalisadorLexico(fp);
 	
 	prog();
-	Erro(0);
+	printf("\nPrograma Compilado sem Erros");
 	fclose(fp);
 	
 	return 0;

@@ -16,7 +16,9 @@ char erros[][70] = {
 	"Token invalido - Operador Logico esperado incorreto", //Erro 14
 	"Token esperado invalido - Esperado Operador Relacional", //Erro 15
 	"Token invalido - Operador Relacional esperado incorreto", //Erro 16
-	"Token esperado invalido - Esperado Delimitador" //Erro 17
+	"Token esperado invalido - Esperado Delimitador", //Erro 17
+	"Token esperado nao atende as especificações de fator", //Erro 18
+	"Token Invalido"
 	}; 
 	
 
@@ -28,3 +30,9 @@ void fwd();
 void atrib();
 void oprel();
 void tipos_param();
+void cmd();
+void expr();
+void expr_simp();
+void termo();
+void fator();
+void op_rel();
