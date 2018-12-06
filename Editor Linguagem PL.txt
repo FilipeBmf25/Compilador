@@ -1,10 +1,1 @@
-pl
-teste
-
-var
-
-char teste,a
-
-int a,b
-
-endvar
++.not.teste*.not.teste.or.5.and..not.'c'==+.not.teste*.not.teste.or.5.and..not.'c'

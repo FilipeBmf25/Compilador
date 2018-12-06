@@ -114,9 +114,11 @@ Token AnalisadorLexico(FILE *fp){
 
 						}else if (ch == EOF){
 							tk.cat=FIM;
+							tk.valor.numInt=99;
 							return (tk);
 						}else{
 							tk.cat = ERRO;
+							tk.valor.numInt=99;
 							return(tk);
 						}
 

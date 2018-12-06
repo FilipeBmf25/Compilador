@@ -13,13 +13,6 @@ int linha=1;
 void getToken(){ // Retorna o próximo Token do ANALEX
 	tk = tk_next;
 	tk_next=AnalisadorLexico(fp);
-	if(tk.valor.numInt==CR){
-		do{
-		tk = tk_next;
-		tk_next=AnalisadorLexico(fp);
-		linha ++;	
-		}while((tk.cat==CARAC_ESPEC)&&(tk.valor.numInt==CR));
-	}
 }
 
 void Erro(int e) { // Função de retorno de mensagem de erro
@@ -214,55 +207,59 @@ void expr(){
 }
 
 void expr_simp(){
-	if((tk_next.valor.numInt==MAIS)||(tk_next.valor.numInt==MENOS)){
+	if(((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MAIS))||((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MENOS))){
 		getToken();
 	}
 	termo();
-	while((tk_next.valor.numInt==MAIS)||(tk_next.valor.numInt==MENOS)||(tk_next.valor.numInt==OR)){
-		getToken();
-		termo();
+	while(((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MAIS))||
+		 ((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MENOS))||
+		 ((tk_next.cat==OPLOG)&&(tk_next.valor.numInt==OR))){
+			getToken();
+			termo();
 	}
 }
 
 void termo(){
 	fator();
-	while((tk_next.valor.numInt==MULTIPLICACAO)||(tk_next.valor.numInt==DIVISAO)||(tk_next.valor.numInt==AND)){
-		getToken();
-		fator();
+	while(((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MULTIPLICACAO))||
+		 ((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==DIVISAO))||
+		 ((tk_next.cat==OPLOG)&&(tk_next.valor.numInt==AND))){
+			getToken();
+			fator();
 	}
 }
 
 void fator(){
 	if(tk_next.cat==ID){
 		getToken();
-		if(tk_next.valor.numInt==A_PARENT){
+		if((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==A_PARENT)){
 			getToken();
-			if((tk_next.valor.numInt==MAIS)||
-			(tk_next.valor.numInt==MENOS)||
-			(tk_next.valor.numInt==NOT)||
-			(tk_next.valor.numInt==A_PARENT)||
+			if(((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MAIS))||
+			((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MENOS))||
+			((tk_next.cat==OPLOG)&&(tk_next.valor.numInt==NOT))||
+			((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT))||
 			(tk_next.cat==ID)||
 			(tk_next.cat==INTCON)||
 			(tk_next.cat==REALCON)||
 			(tk_next.cat==CARACCON)){
 				expr();
-				while(tk_next.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
+				while((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==VIRG)){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
 						getToken();
 						expr();
 				}		
 			}
-			if(!(tk_next.valor.numInt==F_PARENT)) Erro(4);
+			if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==F_PARENT))) Erro(4);
 			getToken();
 		}
 	}else if(tk_next.cat==INTCON) getToken();
 		else if(tk_next.cat==REALCON) getToken();
 		else if(tk_next.cat==CARACCON) getToken();
-		else if(tk_next.valor.numInt==A_PARENT){
+		else if((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT)){
 			getToken();
 			expr();
 			getToken();
-			if(!(tk.valor.numInt==F_PARENT)) Erro(4);	
-		}else if(tk_next.valor.numInt==NOT){
+			if(!((tk.cat==DELIMITADOR)&&(tk.valor.numInt==F_PARENT))) Erro(4);	
+		}else if((tk_next.cat==OPLOG)&&(tk_next.valor.numInt==NOT)){
 			getToken();
 			fator();
 		}else Erro(18);		
@@ -270,7 +267,7 @@ void fator(){
 
 void op_rel(){
 	getToken();
-	if(!(tk.cat!=OPREL)) Erro(15);
+	if(!(tk.cat==OPREL)) Erro(15);
 	if(tk.valor.numInt==IGUAL) Erro(16);
 }
 
@@ -281,7 +278,7 @@ int main(int argc, char *argv[]) {
 	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
 	tk_next=AnalisadorLexico(fp);
 	
-	prog();
+	expr();
 	printf("\nPrograma Compilado sem Erros");
 	fclose(fp);
 	
