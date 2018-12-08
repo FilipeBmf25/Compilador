@@ -421,7 +421,7 @@ void termo(){
 void fator(){
 	if(tk_next.cat==ID){
 		getToken();
-		if((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==A_PARENT)){
+		if((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT)){
 			getToken();
 			if(((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MAIS))||
 			((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MENOS))||
@@ -464,11 +464,11 @@ int main(int argc, char *argv[]) {
 	int linha=0; 
 	printf("[ANALEX LINGUAGEM PL]\n\n");
 	system("color f0");
-	if((fp = fopen("teste.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
+	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
 	tk_next=AnalisadorLexico(fp);
 	
 	
-	cmd();
+	prog();
 	printf("\nPrograma Compilado sem Erros");
 	fclose(fp);
 	
