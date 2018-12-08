@@ -1,8 +1,23 @@
-for(teste = 7,+.not.teste*.not.6,teste =5)
-while(+.not.teste*.not.6)
-teste = 7.5
-if (+.not.teste*.not.6)
-teste = 7.5
+pl teste
+var
+	char a,b
+	int x,z
+endvar
+
+char funcao(bool t,real c)
+
+int a,b
+
+if(+.not.teste*.not.6);
 endif
-endwhile
-endfor
+
+endfunc
+
+prog
+	for(teste = 7,teste<=5,teste=-'a')
+		c = c(10,5.6);
+	endfor
+
+endprog
+
+ 

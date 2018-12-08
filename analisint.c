@@ -29,24 +29,45 @@ void Erro(int e) { // Função de retorno de mensagem de erro
 
 void prog(){
 	getToken();
-	if(!(tk.cat==PR))Erro(8);
-	if(!(tk.valor.numInt==PL)) Erro(9);// Compara o token retornado com o token obrigatório PL
+	if(!((tk.cat==PR)&&(tk.valor.numInt==PL))) Erro(8);
+	if(!((tk_next.cat==ID)))Erro(10);
+	getToken();
+	if((tk_next.cat==PR)&&(tk_next.valor.numInt==VAR)){
 		getToken();
-		if(tk.cat!=ID) Erro(10);// Compara o token retornado com o token obrigatório ID
-			getToken();
-			if((tk.cat==PR)&&(tk.valor.numInt==VAR)){ // Análise do token para verificar a existência de VAR no prog
-				while(tk_next.valor.numInt!=ENDVAR){ // Laço para determinar se existe nenhuma,uma ou mais de uma declaração de variável
-						tipo();
-						decl_var();	
-						while(tk_next.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
-							getToken();
-							decl_var();
-						}
+		while(((tk_next.cat==PR)&&(tk_next.valor.numInt==CHAR))||
+			 ((tk_next.cat==PR)&&(tk_next.valor.numInt==INT))||
+			 ((tk_next.cat==PR)&&(tk_next.valor.numInt==REAL))||
+		 	 ((tk_next.cat==PR)&&(tk_next.valor.numInt==BOOL))){
+		 	 	tipo();
+		 	 	decl_var();
+		 	 	while(tk_next.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
+					getToken();
+					decl_var();
 				}
-									
-			}
+		}
+		if(!((tk_next.cat==PR)&&(tk_next.valor.numInt==ENDVAR))) Erro(8);
+		getToken();
+	}
+	while(!((tk_next.cat==PR)&&(tk_next.valor.numInt==PROG))){
+	
+		if((tk_next.cat==PR)&&(tk_next.valor.numInt==FWD)){
+			fwd();
+		}else if(((tk_next.cat==PR)&&(tk_next.valor.numInt==PROC))){
+			proc();
+		}else{
+			func();
+		}
+		
+	}
+	getToken();
+	cmd();
+	while(!((tk_next.cat==PR)&&(tk_next.valor.numInt==ENDPROG))){
+		cmd();
+	}
+	getToken();
+				
 }
-
+// ======================================================FIM DE PROG=====================================================
 void decl_var(){ // Função para comparar se o token é um ID
 	getToken();
 	if(tk.cat!=ID) Erro(10); // Mensagem de erro caso não for ID
@@ -153,7 +174,7 @@ void proc(){
 		  	  while(tk_next.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
 				  getToken();
 				  decl_var();
-		  }
+		  	  }
 	}
 	
 	while(tk_next.valor.numInt!=ENDPROC){
@@ -274,27 +295,86 @@ void cmd(){
 	
 	}else if(tk_next.valor.numInt==RETURN){
 		getToken();
+		if((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT)){
+			getToken();
+			expr();
+			if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==F_PARENT)))	Erro(4);	
+			getToken();		
+		}
 		
-	
+// ======================================================FIM DO RETURN====================================================	
 	}else if(tk_next.cat==ID) {
 		atrib();
 		
-	
+// ======================================================FIM DO ATRIB====================================================	
 	}else if(tk_next.valor.numInt==CALL){
 		getToken();
-		
-	
+		if(!(tk_next.cat==ID)) Erro(10);
+		getToken();
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT)))Erro(3);
+		getToken();
+		if	(((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MAIS))||
+			((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MENOS))||
+			((tk_next.cat==OPLOG)&&(tk_next.valor.numInt==NOT))||
+			((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT))||
+			(tk_next.cat==ID)||
+			(tk_next.cat==INTCON)||
+			(tk_next.cat==REALCON)||
+			(tk_next.cat==CARACCON)){
+				expr();
+				while(tk_next.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
+				  getToken();
+				  expr();
+		  	  }
+				
+		}
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==F_PARENT)))Erro(4);
+		getToken();
+// ======================================================FIM DO CALL====================================================		
 	}else if(tk_next.valor.numInt==PT_VIRG){
 		getToken();
 		
-	
+//======================================================FIM DO PT_VIRG====================================================	
 	}else if(tk_next.valor.numInt==KEYBOARD){
 		getToken();
-		
-	
+		if(!(tk_next.cat==ID))Erro(10);
+		while(tk_next.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
+			getToken();
+			if(!(tk_next.cat==ID))Erro(10);
+			getToken();
+		}
+
+//======================================================FIM DO KEYBOARD====================================================		  		
 	}else if (tk_next.valor.numInt==DISPLAY){
 		getToken();
+		if	(!((tk_next.cat==ID)||
+			(tk_next.cat==INTCON)||
+			(tk_next.cat==REALCON)||
+			(tk_next.cat==CARACCON)||
+			(tk_next.cat==CADEIACON))) Erro(19);
 		
+		getToken();
+		if((tk_next.cat==PR)&&(tk_next.valor.numInt==DUP)){
+			getToken();
+			if(!((tk_next.cat==ID)||(tk_next.cat==INTCON)))Erro(19);
+			getToken();
+		}
+		while(tk_next.valor.numInt==VIRG){// Laço de controle baseado na virgula, caso exista mais de uma declaração de variavel
+			getToken();
+			if	(!((tk_next.cat==ID)||
+				(tk_next.cat==INTCON)||
+				(tk_next.cat==REALCON)||
+				(tk_next.cat==CARACCON)||
+				(tk_next.cat==CADEIACON))) Erro(19);
+			getToken();
+			if((tk_next.cat==PR)&&(tk_next.valor.numInt==DUP)){
+			getToken();
+			if(!((tk_next.cat==ID)||(tk_next.cat==INTCON)))Erro(19);
+			getToken();
+			}	
+		}
+		
+//======================================================FIM DO DISPLAY====================================================			
 	}else Erro(19);
 }
 
@@ -384,8 +464,9 @@ int main(int argc, char *argv[]) {
 	int linha=0; 
 	printf("[ANALEX LINGUAGEM PL]\n\n");
 	system("color f0");
-	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
+	if((fp = fopen("teste.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
 	tk_next=AnalisadorLexico(fp);
+	
 	
 	cmd();
 	printf("\nPrograma Compilado sem Erros");

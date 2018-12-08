@@ -37,3 +37,5 @@ void expr_simp();
 void termo();
 void fator();
 void op_rel();
+void func();
+void prog();
