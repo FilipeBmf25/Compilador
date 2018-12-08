@@ -13,6 +13,11 @@ int linha=1;
 void getToken(){ // Retorna o próximo Token do ANALEX
 	tk = tk_next;
 	tk_next=AnalisadorLexico(fp);
+	while((tk_next.cat == CARAC_ESPEC)&&(tk_next.valor.numInt == CR)){
+		linha++;
+		tk_next=AnalisadorLexico(fp);
+		
+	}
 }
 
 void Erro(int e) { // Função de retorno de mensagem de erro
@@ -159,30 +164,93 @@ void proc(){
 }
 
 void cmd(){
+// ======================================================INICIO DO IF=====================================================  
 	if(tk_next.valor.numInt==IF){
 		getToken();
-		
-	}else if(tk_next.valor.numInt==WHILE){
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT))) Erro(3);
 		getToken();
-		
+		expr();
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==F_PARENT))) Erro(4);
+		getToken();
+		cmd();
+		while (((tk_next.cat==PR)&&(tk_next.valor.numInt==IF))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==WHILE))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==FOR))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==RETURN))||
+		   	  (tk_next.cat==ID)||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==CALL))||
+		   	  ((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==PT_VIRG))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==KEYBOARD))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==DISPLAY))){
+		   	
+		   		cmd();	
+		   }
+		if((tk_next.cat==PR)&&(tk_next.valor.numInt==ELSE)){
+			getToken();
+			cmd();
+			while (((tk_next.cat==PR)&&(tk_next.valor.numInt==IF))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==WHILE))||
+		  	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==FOR))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==RETURN))||
+		   	  (tk_next.cat==ID)||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==CALL))||
+		   	  ((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==PT_VIRG))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==KEYBOARD))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==DISPLAY))){
+		   	
+		   		cmd();	
+		   }	
+		}
+		if(!((tk_next.cat==PR)&&(tk_next.valor.numInt==ENDIF))) Erro(8);
+		getToken();
+ // ======================================================FIM DO IF=====================================================  
+	}else if((tk_next.cat==PR)&&(tk_next.valor.numInt==WHILE)){
+		getToken();
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT))) Erro(3);
+		getToken();
+		expr();
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==F_PARENT))) Erro(4);
+		getToken();
+		cmd();
+		while (((tk_next.cat==PR)&&(tk_next.valor.numInt==IF))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==WHILE))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==FOR))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==RETURN))||
+		   	  (tk_next.cat==ID)||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==CALL))||
+		   	  ((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==PT_VIRG))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==KEYBOARD))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==DISPLAY))){
+		   	
+		   		cmd();	
+		   }
+		if(!((tk_next.cat==PR)&&(tk_next.valor.numInt==ENDWHILE))) Erro(8);
+		getToken();
+	
 	}else if(tk_next.valor.numInt==FOR){
 		getToken();
 		
+	
 	}else if(tk_next.valor.numInt==RETURN){
 		getToken();
 		
+	
 	}else if(tk_next.cat==ID) {
 		atrib();
 		
+	
 	}else if(tk_next.valor.numInt==CALL){
 		getToken();
 		
+	
 	}else if(tk_next.valor.numInt==PT_VIRG){
 		getToken();
 		
+	
 	}else if(tk_next.valor.numInt==KEYBOARD){
 		getToken();
 		
+	
 	}else if (tk_next.valor.numInt==DISPLAY){
 		getToken();
 		
@@ -194,7 +262,7 @@ void atrib(){
 	if(!(tk.cat==ID)) Erro(10);
 	getToken();
 	if(!(tk.cat==OPREL)) Erro(16);
-	if(!(tk.cat==IGUAL)) Erro(17);
+	if(!(tk.valor.numInt==IGUAL)) Erro(17);
 	expr();
 }
 
@@ -278,7 +346,7 @@ int main(int argc, char *argv[]) {
 	if((fp = fopen("Editor Linguagem PL.txt","r"))==NULL) printf("Arquivo nao pode ser aberto\n"); // VALIDANDO A ABERTURA DO ARQUIVO 
 	tk_next=AnalisadorLexico(fp);
 	
-	expr();
+	cmd();
 	printf("\nPrograma Compilado sem Erros");
 	fclose(fp);
 	

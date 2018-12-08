@@ -1,1 +1,5 @@
-+.not.teste*.not.teste.or.5.and..not.'c'==+.not.teste*.not.teste.or.5.and..not.'c'
+while(+.not.teste*.not.6)
+teste = 7.5
+
+
+endwhile
