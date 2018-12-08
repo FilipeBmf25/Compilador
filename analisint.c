@@ -203,7 +203,9 @@ void cmd(){
 		}
 		if(!((tk_next.cat==PR)&&(tk_next.valor.numInt==ENDIF))) Erro(8);
 		getToken();
+		
  // ======================================================FIM DO IF=====================================================  
+ 
 	}else if((tk_next.cat==PR)&&(tk_next.valor.numInt==WHILE)){
 		getToken();
 		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT))) Erro(3);

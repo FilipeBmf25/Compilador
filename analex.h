@@ -67,8 +67,7 @@ char PalavrasReservadas[][12]=
 	"real",
 	"return",
 	"var",
-	"while",
-	
+	"while"	
 };
 
 /*

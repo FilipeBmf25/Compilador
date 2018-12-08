@@ -155,7 +155,7 @@ Token AnalisadorLexico(FILE *fp){
 
 					case 3 : // RECONHECIMENTO DE ID
 						ungetc(ch,fp);
-						indice = isPalavraReservada(buffer,0,25);
+						indice = isPalavraReservada(buffer,0,26);
 						if(indice==-1){
 							tk.cat = ID;
 							strcpy(tk.valor.s,buffer);

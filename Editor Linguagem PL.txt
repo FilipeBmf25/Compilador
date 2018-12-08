@@ -1,5 +1,6 @@
-while(+.not.teste*.not.6)
+while (+.not.teste*.not.6)
 teste = 7.5
-
-
+if (+.not.teste*.not.6)
+teste = 7.5
+endif
 endwhile
