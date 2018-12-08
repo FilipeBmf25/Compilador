@@ -18,7 +18,8 @@ char erros[][70] = {
 	"Token invalido - Operador Relacional esperado incorreto", //Erro 16
 	"Token esperado invalido - Esperado Delimitador", //Erro 17
 	"Token esperado nao atende as especificações de fator", //Erro 18
-	"Token Invalido"
+	"Token Invalido",//Erro 19
+	"Token Invalido - esperando virgula"//Erro 20
 	}; 
 	
 

@@ -228,10 +228,49 @@ void cmd(){
 		   }
 		if(!((tk_next.cat==PR)&&(tk_next.valor.numInt==ENDWHILE))) Erro(8);
 		getToken();
-	
+// ======================================================FIM DO WHILE=====================================================	
 	}else if(tk_next.valor.numInt==FOR){
 		getToken();
-		
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT))) Erro(3);
+		getToken();
+		if(tk_next.cat==ID){
+			atrib();
+		}
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==VIRG))) Erro(20);
+		getToken();
+		if	(((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MAIS))||
+			((tk_next.cat==OPARIT)&&(tk_next.valor.numInt==MENOS))||
+			((tk_next.cat==OPLOG)&&(tk_next.valor.numInt==NOT))||
+			((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==A_PARENT))||
+			(tk_next.cat==ID)||
+			(tk_next.cat==INTCON)||
+			(tk_next.cat==REALCON)||
+			(tk_next.cat==CARACCON)){
+				expr();
+			}
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==VIRG))) Erro(20);
+		getToken();
+		if(tk_next.cat==ID){
+			atrib();
+		}
+		if(!((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==F_PARENT))) Erro(4);
+		getToken();
+		cmd();
+		while (((tk_next.cat==PR)&&(tk_next.valor.numInt==IF))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==WHILE))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==FOR))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==RETURN))||
+		   	  (tk_next.cat==ID)||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==CALL))||
+		   	  ((tk_next.cat==DELIMITADOR)&&(tk_next.valor.numInt==PT_VIRG))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==KEYBOARD))||
+		   	  ((tk_next.cat==PR)&&(tk_next.valor.numInt==DISPLAY))){
+		   	
+		   		cmd();	
+		}
+		if(!((tk_next.cat==PR)&&(tk_next.valor.numInt==ENDFOR))) Erro(8);
+		getToken();
+// ======================================================FIM DO FOR=====================================================			
 	
 	}else if(tk_next.valor.numInt==RETURN){
 		getToken();
