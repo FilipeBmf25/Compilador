@@ -1,0 +1,9 @@
+	if(-expressao>=expressao(.not.5,'t',5.7)*40.or.(expressao>'x'))
+		keyboard teste,teste2,teste3;
+	else while(expressao>50.and..not.'r')
+		display teste3 dup teste3, 
+			teste2 dup 5,
+			teste dup 50;
+	     endwhile
+	endif
+	

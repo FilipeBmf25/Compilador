@@ -1,0 +1,26 @@
+pl teste2
+
+proc teste (char a, int b)
+	char teste, num
+	bool teste, num
+if(teste>5) 
+	teste = 5;
+else if (teste<5)
+	teste =10;
+endif
+endif
+endproc
+
+prog
+
+while(teste*.not.(teste<10))
+	for(teste=0,teste<=10,teste=6) 
+		display teste dup 5, 
+			teste dup 7,
+			teste dup teste;
+	endfor
+endwhile
+
+return (0);
+
+endprog

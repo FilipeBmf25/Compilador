@@ -17,10 +17,43 @@ char erros[][70] = {
 	"Token esperado invalido - Esperado Operador Relacional", //Erro 15
 	"Token invalido - Operador Relacional esperado incorreto", //Erro 16
 	"Token esperado invalido - Esperado Delimitador", //Erro 17
-	"Token esperado nao atende as especificações de fator", //Erro 18
+	"Token esperado nao atende as especificacoes de fator", //Erro 18
 	"Token Invalido",//Erro 19
-	"Token Invalido - esperando virgula"//Erro 20
+	"Token Invalido - esperando virgula",//Erro 20
+	"Token Invalido apos programa"//Erro 21
 	}; 
+/*	
+typedef enum Escopo_S{
+LOCAL,
+GLOBAL
+} ESCOPO_S;	
+
+typedef enum Tipo_S{
+INT,
+REAL,
+BOOL,
+CHAR
+} TIPO_S;
+
+typedef enum Categoria_S{
+FUNCAO,
+PROCEDIMENTO,
+PARAMETRO,
+VARIAVEL
+} CATEGORIA_S;
+	
+typedef struct simbolo {
+	char lexema[10];
+	TIPO_S tipo;
+	CATEGORIA_S categoria;
+	ESCOPO_S escopo;
+}Simbolo;
+
+Simbolo tabela_simbolos[200];
+
+void inserirTabela_S(char *s, ESCOPO_S escopo, TIPO_S tipo, CATEGORIA_S cat);
+
+*/
 	
 
 void decl_var();
